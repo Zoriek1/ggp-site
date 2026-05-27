@@ -1,0 +1,104 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "members": "Members",
+    "pgps": "PGPs",
+    "publications": "Publications",
+    "theses": "Theses & Dissertations",
+    "teachingMaterials": "Teaching materials",
+    "media": "Media",
+    "resources": "Resources",
+    "events": "Events",
+    "topics": "Topics",
+    "researchAreas": "Research areas",
+    "contact": "Contact"
+  },
+  "common": {
+    "readMore": "Read more",
+    "download": "Download",
+    "openExternal": "Open in new tab",
+    "by": "by",
+    "year": "Year",
+    "level": "Level",
+    "topics": "Topics",
+    "researchAreas": "Areas",
+    "tags": "Tags",
+    "authors": "Authors",
+    "advisor": "Advisor",
+    "coAdvisor": "Co-advisor",
+    "doi": "DOI",
+    "venue": "Venue",
+    "abstract": "Abstract",
+    "summary": "Summary",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "of": "of",
+    "noResults": "Nothing here yet.",
+    "translationPending": "English translation pending — showing Portuguese content.",
+    "backTo": "Back to",
+    "publishedIn": "Published in",
+    "speakers": "Speakers",
+    "watch": "Watch",
+    "registrationOpen": "Registration open",
+    "starts": "Starts",
+    "ends": "Ends",
+    "location": "Location",
+    "online": "Online"
+  },
+  "home": {
+    "heroTitle": "Large Research Group",
+    "heroSubtitle": "Research and education in physics teaching at UFG",
+    "featuredPublications": "Featured publications",
+    "recentTheses": "Recent theses & dissertations",
+    "teachingMaterials": "Teaching materials",
+    "upcomingEvents": "Upcoming events",
+    "exploreAll": "Explore all"
+  },
+  "members": {
+    "active": "Active members",
+    "inactive": "Past members",
+    "publications": "Publications",
+    "thesesAuthored": "Authored theses",
+    "thesesAdvised": "Advised theses",
+    "teachingMaterials": "Teaching materials",
+    "media": "Media",
+    "events": "Events",
+    "pgps": "PGPs they take part in"
+  },
+  "pgps": {
+    "active": "Active PGPs",
+    "forming": "Forming",
+    "inactive": "Closed",
+    "membersCount": "members",
+    "noMembers": "No members assigned yet.",
+    "coordinator": "Coordinator",
+    "school": "School / context"
+  },
+  "roles": {
+    "coordinator": "Coordinator",
+    "researcher": "Researcher",
+    "postdoc": "Postdoc",
+    "phd": "PhD student",
+    "msc": "MSc student",
+    "undergrad": "Undergraduate",
+    "collaborator": "Collaborator"
+  },
+  "thesisLevel": {
+    "tcc": "Undergrad thesis",
+    "masters": "Master's",
+    "doctorate": "PhD"
+  },
+  "mediaType": {
+    "video": "Video",
+    "lecture": "Lecture",
+    "podcast": "Podcast",
+    "webinar": "Webinar"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "about": "About",
+    "contact": "Contact"
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "nav": {
+    "home": "Início",
+    "about": "Sobre",
+    "members": "Membros",
+    "pgps": "PGPs",
+    "publications": "Publicações",
+    "theses": "Teses e Dissertações",
+    "teachingMaterials": "Materiais didáticos",
+    "media": "Mídia",
+    "resources": "Recursos",
+    "events": "Eventos",
+    "topics": "Tópicos",
+    "researchAreas": "Áreas de pesquisa",
+    "contact": "Contato"
+  },
+  "common": {
+    "readMore": "Ver mais",
+    "download": "Baixar",
+    "openExternal": "Abrir em nova aba",
+    "by": "por",
+    "year": "Ano",
+    "level": "Nível",
+    "topics": "Tópicos",
+    "researchAreas": "Áreas",
+    "tags": "Tags",
+    "authors": "Autores",
+    "advisor": "Orientador(a)",
+    "coAdvisor": "Coorientador(a)",
+    "doi": "DOI",
+    "venue": "Publicação",
+    "abstract": "Resumo",
+    "summary": "Resumo",
+    "previous": "Anterior",
+    "next": "Próxima",
+    "page": "Página",
+    "of": "de",
+    "noResults": "Nada por aqui ainda.",
+    "translationPending": "Tradução em inglês pendente — exibindo conteúdo em português.",
+    "backTo": "Voltar para",
+    "publishedIn": "Publicado em",
+    "speakers": "Palestrantes",
+    "watch": "Assistir",
+    "registrationOpen": "Inscrições abertas",
+    "starts": "Início",
+    "ends": "Término",
+    "location": "Local",
+    "online": "Online"
+  },
+  "home": {
+    "heroTitle": "Grande Grupo de Pesquisa",
+    "heroSubtitle": "Pesquisa e educação em ensino de física na UFG",
+    "featuredPublications": "Publicações em destaque",
+    "recentTheses": "Teses e dissertações recentes",
+    "teachingMaterials": "Materiais didáticos",
+    "upcomingEvents": "Próximos eventos",
+    "exploreAll": "Explorar tudo"
+  },
+  "members": {
+    "active": "Membros ativos",
+    "inactive": "Ex-membros",
+    "publications": "Publicações",
+    "thesesAuthored": "Teses como autor(a)",
+    "thesesAdvised": "Orientações",
+    "teachingMaterials": "Materiais didáticos",
+    "media": "Mídia",
+    "events": "Eventos",
+    "pgps": "PGPs onde atua"
+  },
+  "pgps": {
+    "active": "PGPs ativos",
+    "forming": "Em formação",
+    "inactive": "Encerrados",
+    "membersCount": "membros",
+    "noMembers": "Sem membros cadastrados ainda.",
+    "coordinator": "Coordenação",
+    "school": "Escola / contexto"
+  },
+  "roles": {
+    "coordinator": "Coordenador(a)",
+    "researcher": "Pesquisador(a)",
+    "postdoc": "Pós-doutorando(a)",
+    "phd": "Doutorando(a)",
+    "msc": "Mestrando(a)",
+    "undergrad": "Graduação",
+    "collaborator": "Colaborador(a)"
+  },
+  "thesisLevel": {
+    "tcc": "TCC / Monografia",
+    "masters": "Mestrado",
+    "doctorate": "Doutorado"
+  },
+  "mediaType": {
+    "video": "Vídeo",
+    "lecture": "Palestra",
+    "podcast": "Podcast",
+    "webinar": "Webinar"
+  },
+  "footer": {
+    "rights": "Todos os direitos reservados.",
+    "about": "Sobre",
+    "contact": "Contato"
+  }
+}
