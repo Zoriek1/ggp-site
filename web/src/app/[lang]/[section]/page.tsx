@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { isLang, type Lang } from "@/i18n/config";
-import { resolveSegment, segmentFor, type RouteKey } from "@/i18n/routes";
+import { getDictionary } from "@/i18n/dictionaries";
+import { resolveSegment, segmentFor, isSearchSegment, type RouteKey } from "@/i18n/routes";
 
 import { AboutPage } from "@/features/institutional/AboutPage";
 import { ContactPage } from "@/features/institutional/ContactPage";
@@ -15,10 +16,12 @@ import { ResourcesListPage } from "@/features/resources/ResourcesListPage";
 import { EventsListPage } from "@/features/events/EventsListPage";
 import { TopicsIndexPage } from "@/features/topics/TopicsIndexPage";
 import { ResearchAreasIndexPage } from "@/features/research-areas/ResearchAreasIndexPage";
+import { SearchPage } from "@/features/search/SearchPage";
 import { buildMetadataForList } from "@/lib/seo/metadata";
+import { parseFilters, type RawSearchParams } from "@/lib/discovery/filters";
 
 type RouteParams = { lang: string; section: string };
-type SearchParams = { page?: string };
+type SearchParams = RawSearchParams;
 
 // Alguns renderers ignoram `page` — TS aceita passar a prop extra via cast.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,6 +49,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang, section } = await params;
   if (!isLang(lang)) return {};
+  if (isSearchSegment(section, lang)) {
+    return { title: getDictionary(lang).common.search, robots: { index: false, follow: false } };
+  }
   const key = resolveSegment(section);
   if (!key) return {};
   // hreflang canônico: redireciona o EN para o segmento traduzido se vier no idioma errado
@@ -64,6 +70,11 @@ export default async function SectionPage({
   const sp = await searchParams;
   if (!isLang(lang)) notFound();
 
+  if (isSearchSegment(section, lang)) {
+    const qRaw = Array.isArray(sp.q) ? sp.q[0] : sp.q;
+    return <SearchPage lang={lang} q={(qRaw ?? "").trim()} />;
+  }
+
   const key = resolveSegment(section);
   if (!key) notFound();
 
@@ -72,6 +83,8 @@ export default async function SectionPage({
   if (segmentFor(key, lang) !== section) notFound();
 
   const Renderer = PAGE_RENDERERS[key];
-  const page = Math.max(1, parseInt(sp.page ?? "1", 10) || 1);
-  return <Renderer lang={lang} page={page} />;
+  const pageRaw = Array.isArray(sp.page) ? sp.page[0] : sp.page;
+  const page = Math.max(1, parseInt(pageRaw ?? "1", 10) || 1);
+  const filters = parseFilters(sp);
+  return <Renderer lang={lang} page={page} filters={filters} />;
 }

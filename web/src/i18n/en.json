@@ -12,7 +12,8 @@
     "events": "Events",
     "topics": "Topics",
     "researchAreas": "Research areas",
-    "contact": "Contact"
+    "contact": "Contact",
+    "search": "Search"
   },
   "common": {
     "readMore": "Read more",
@@ -45,7 +46,20 @@
     "starts": "Starts",
     "ends": "Ends",
     "location": "Location",
-    "online": "Online"
+    "online": "Online",
+    "filters": "Filters",
+    "clearFilters": "Clear filters",
+    "result": "result",
+    "results": "results",
+    "type": "Type",
+    "category": "Category",
+    "period": "Period",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "search": "Search",
+    "searchPlaceholder": "Search the repository…",
+    "searchResultsFor": "Results for",
+    "noQuery": "Type a term to search."
   },
   "home": {
     "heroTitle": "Large Research Group",
@@ -95,6 +109,13 @@
     "lecture": "Lecture",
     "podcast": "Podcast",
     "webinar": "Webinar"
+  },
+  "resourceCategory": {
+    "link": "Useful link",
+    "dataset": "Dataset",
+    "tool": "Tool / Software",
+    "text": "Text / Booklet",
+    "other": "Other"
   },
   "footer": {
     "rights": "All rights reserved.",

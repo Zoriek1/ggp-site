@@ -7,12 +7,18 @@ type Props = {
   totalPages: number;
   basePath: string; // ex.: "/pt/publicacoes"
   lang: Lang;
+  query?: Record<string, string>; // filtros ativos a preservar nos links
 };
 
-export function Pagination({ page, totalPages, basePath, lang }: Props) {
+export function Pagination({ page, totalPages, basePath, lang, query = {} }: Props) {
   if (totalPages <= 1) return null;
   const dict = getDictionary(lang);
-  const linkFor = (n: number) => (n === 1 ? basePath : `${basePath}?page=${n}`);
+  const linkFor = (n: number) => {
+    const params = new URLSearchParams(query);
+    if (n > 1) params.set("page", String(n));
+    const qs = params.toString();
+    return qs ? `${basePath}?${qs}` : basePath;
+  };
 
   const prev = page > 1 ? linkFor(page - 1) : null;
   const next = page < totalPages ? linkFor(page + 1) : null;

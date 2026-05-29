@@ -5,6 +5,7 @@ import { getDictionary, tField } from "@/i18n/dictionaries";
 import { localizedHref, type RouteKey } from "@/i18n/routes";
 import { Container } from "./Container";
 import { LangSwitch } from "./LangSwitch";
+import { SearchBox } from "./SearchBox";
 import { sanityFetch } from "@/lib/sanity/client";
 import { siteSettingsQuery } from "@/lib/sanity/queries";
 import { PRESETS } from "@/lib/sanity/image";
@@ -60,7 +61,14 @@ export async function Header({ lang }: { lang: Lang }) {
           ))}
         </nav>
 
-        <LangSwitch currentLang={lang} />
+        <div className="flex items-center gap-4">
+          <SearchBox
+            lang={lang}
+            placeholder={dict.common.searchPlaceholder}
+            label={dict.common.search}
+          />
+          <LangSwitch currentLang={lang} />
+        </div>
       </Container>
     </header>
   );

@@ -51,6 +51,11 @@ export const resolveSegment = (segment: string): RouteKey | null =>
 
 export const segmentFor = (key: RouteKey, lang: Lang): string => SEGMENTS[key][lang];
 
+/** Segmento da página de busca por idioma. Rota especial, fora do union RouteKey. */
+export const SEARCH_SEGMENTS: Record<Lang, string> = { pt: "busca", en: "search" };
+export const isSearchSegment = (segment: string, lang: Lang): boolean =>
+  SEARCH_SEGMENTS[lang] === segment;
+
 /** Constrói href localizado. Use isto em vez de concatenar strings manualmente. */
 export const localizedHref = (
   key: RouteKey,

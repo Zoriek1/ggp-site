@@ -4,22 +4,38 @@ import { tField, getDictionary } from "@/i18n/dictionaries";
 import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
 import { Pagination } from "@/components/Pagination";
+import { FilterBar } from "@/components/FilterBar";
 import { Hreflang } from "@/components/Hreflang";
 import { sanityFetch } from "@/lib/sanity/client";
 import { thesisListQuery } from "@/lib/sanity/queries";
 import type { Thesis } from "@/lib/sanity/types";
 import { slugFor } from "@/lib/slug";
 import { pageBounds, totalPagesFor } from "@/lib/pagination";
+import { buildFacets } from "@/lib/discovery/facets";
+import { type Filters, filtersToQuery } from "@/lib/discovery/filters";
 
-export async function ThesesListPage({ lang, page }: { lang: Lang; page: number }) {
+export async function ThesesListPage({
+  lang,
+  page,
+  filters = {},
+}: {
+  lang: Lang;
+  page: number;
+  filters?: Filters;
+}) {
   const { start, end, page: p } = pageBounds(page);
-  const data = await sanityFetch<{ items: Thesis[]; total: number }>(
-    thesisListQuery,
-    { start, end },
-    { tags: ["thesis"] },
-  );
+  const q = thesisListQuery(filters);
+  const [data, facets] = await Promise.all([
+    sanityFetch<{ items: Thesis[]; total: number }>(
+      q.query,
+      { ...q.params, start, end },
+      { tags: ["thesis"] },
+    ),
+    buildFacets(lang, "thesis", ["topic", "area", "tag", "thesisLevel", "year"]),
+  ]);
   const dict = getDictionary(lang);
   const totalPages = totalPagesFor(data.total);
+  const resultsLabel = `${data.total} ${data.total === 1 ? dict.common.result : dict.common.results}`;
 
   return (
     <>
@@ -28,6 +44,8 @@ export async function ThesesListPage({ lang, page }: { lang: Lang; page: number 
       />
       <Container className="py-12 max-w-4xl">
         <h1 className="font-serif text-4xl text-ink-900">{dict.nav.theses}</h1>
+
+        <FilterBar facets={facets} clearLabel={dict.common.clearFilters} resultsLabel={resultsLabel} />
 
         {data.items.length === 0 ? (
           <p className="mt-10 text-ink-500">{dict.common.noResults}</p>
@@ -58,6 +76,7 @@ export async function ThesesListPage({ lang, page }: { lang: Lang; page: number 
           totalPages={totalPages}
           basePath={localizedHref("theses", lang)}
           lang={lang}
+          query={filtersToQuery(filters)}
         />
       </Container>
     </>

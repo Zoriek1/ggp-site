@@ -56,18 +56,20 @@ export default async function HomePage({ params }: { params: Promise<Params> }) 
   const { lang } = await params;
   if (!isLang(lang)) notFound();
 
+  const materialsQ = teachingMaterialListQuery();
+  const thesesQ = thesisListQuery();
   const [settings, featuredPubs, events, materialsData, thesesData] = await Promise.all([
     sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, { tags: ["siteSettings"] }),
     sanityFetch<Publication[]>(featuredPublicationsQuery, {}, { tags: ["publication"] }),
     sanityFetch<EventItem[]>(upcomingEventsQuery, {}, { tags: ["event"] }),
     sanityFetch<{ items: TeachingMaterial[]; total: number }>(
-      teachingMaterialListQuery,
-      { start: 0, end: 6 },
+      materialsQ.query,
+      { ...materialsQ.params, start: 0, end: 6 },
       { tags: ["teachingMaterial"] },
     ),
     sanityFetch<{ items: Thesis[]; total: number }>(
-      thesisListQuery,
-      { start: 0, end: 4 },
+      thesesQ.query,
+      { ...thesesQ.params, start: 0, end: 4 },
       { tags: ["thesis"] },
     ),
   ]);

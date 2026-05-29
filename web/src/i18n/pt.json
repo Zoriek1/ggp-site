@@ -12,7 +12,8 @@
     "events": "Eventos",
     "topics": "Tópicos",
     "researchAreas": "Áreas de pesquisa",
-    "contact": "Contato"
+    "contact": "Contato",
+    "search": "Busca"
   },
   "common": {
     "readMore": "Ver mais",
@@ -45,7 +46,20 @@
     "starts": "Início",
     "ends": "Término",
     "location": "Local",
-    "online": "Online"
+    "online": "Online",
+    "filters": "Filtros",
+    "clearFilters": "Limpar filtros",
+    "result": "resultado",
+    "results": "resultados",
+    "type": "Tipo",
+    "category": "Categoria",
+    "period": "Período",
+    "upcoming": "Próximos",
+    "past": "Passados",
+    "search": "Buscar",
+    "searchPlaceholder": "Buscar no acervo…",
+    "searchResultsFor": "Resultados para",
+    "noQuery": "Digite um termo para buscar."
   },
   "home": {
     "heroTitle": "Grande Grupo de Pesquisa",
@@ -95,6 +109,13 @@
     "lecture": "Palestra",
     "podcast": "Podcast",
     "webinar": "Webinar"
+  },
+  "resourceCategory": {
+    "link": "Link útil",
+    "dataset": "Dataset",
+    "tool": "Simulador / Software",
+    "text": "Apostila / Texto",
+    "other": "Outro"
   },
   "footer": {
     "rights": "Todos os direitos reservados.",

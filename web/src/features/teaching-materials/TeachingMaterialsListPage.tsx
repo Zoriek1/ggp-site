@@ -4,6 +4,7 @@ import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
 import { Card } from "@/components/Card";
 import { Pagination } from "@/components/Pagination";
+import { FilterBar } from "@/components/FilterBar";
 import { Hreflang } from "@/components/Hreflang";
 import { sanityFetch } from "@/lib/sanity/client";
 import { teachingMaterialListQuery } from "@/lib/sanity/queries";
@@ -11,16 +12,31 @@ import type { TeachingMaterial } from "@/lib/sanity/types";
 import { slugFor } from "@/lib/slug";
 import { PRESETS } from "@/lib/sanity/image";
 import { pageBounds, totalPagesFor } from "@/lib/pagination";
+import { buildFacets } from "@/lib/discovery/facets";
+import { type Filters, filtersToQuery } from "@/lib/discovery/filters";
 
-export async function TeachingMaterialsListPage({ lang, page }: { lang: Lang; page: number }) {
+export async function TeachingMaterialsListPage({
+  lang,
+  page,
+  filters = {},
+}: {
+  lang: Lang;
+  page: number;
+  filters?: Filters;
+}) {
   const { start, end, page: p } = pageBounds(page);
-  const data = await sanityFetch<{ items: TeachingMaterial[]; total: number }>(
-    teachingMaterialListQuery,
-    { start, end },
-    { tags: ["teachingMaterial"] },
-  );
+  const q = teachingMaterialListQuery(filters);
+  const [data, facets] = await Promise.all([
+    sanityFetch<{ items: TeachingMaterial[]; total: number }>(
+      q.query,
+      { ...q.params, start, end },
+      { tags: ["teachingMaterial"] },
+    ),
+    buildFacets(lang, "teachingMaterial", ["topic", "eduLevel", "tag"]),
+  ]);
   const dict = getDictionary(lang);
   const totalPages = totalPagesFor(data.total);
+  const resultsLabel = `${data.total} ${data.total === 1 ? dict.common.result : dict.common.results}`;
 
   return (
     <>
@@ -32,6 +48,8 @@ export async function TeachingMaterialsListPage({ lang, page }: { lang: Lang; pa
       />
       <Container className="py-12">
         <h1 className="font-serif text-4xl text-ink-900">{dict.nav.teachingMaterials}</h1>
+
+        <FilterBar facets={facets} clearLabel={dict.common.clearFilters} resultsLabel={resultsLabel} />
 
         {data.items.length === 0 ? (
           <p className="mt-10 text-ink-500">{dict.common.noResults}</p>
@@ -57,6 +75,7 @@ export async function TeachingMaterialsListPage({ lang, page }: { lang: Lang; pa
           totalPages={totalPages}
           basePath={localizedHref("teachingMaterials", lang)}
           lang={lang}
+          query={filtersToQuery(filters)}
         />
       </Container>
     </>

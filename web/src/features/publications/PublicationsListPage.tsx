@@ -1,9 +1,10 @@
 import type { Lang } from "@/i18n/config";
 import { tField, getDictionary } from "@/i18n/dictionaries";
-import { localizedHref } from "@/i18n/routes";
+import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
 import { Card } from "@/components/Card";
 import { Pagination } from "@/components/Pagination";
+import { FilterBar } from "@/components/FilterBar";
 import { Hreflang } from "@/components/Hreflang";
 import { sanityFetch } from "@/lib/sanity/client";
 import { publicationListQuery } from "@/lib/sanity/queries";
@@ -11,17 +12,31 @@ import type { Publication } from "@/lib/sanity/types";
 import { slugFor } from "@/lib/slug";
 import { resolvePdf } from "@/lib/files";
 import { PAGE_SIZE, pageBounds, totalPagesFor } from "@/lib/pagination";
-import { segmentFor } from "@/i18n/routes";
+import { buildFacets } from "@/lib/discovery/facets";
+import { type Filters, filtersToQuery } from "@/lib/discovery/filters";
 
-export async function PublicationsListPage({ lang, page }: { lang: Lang; page: number }) {
+export async function PublicationsListPage({
+  lang,
+  page,
+  filters = {},
+}: {
+  lang: Lang;
+  page: number;
+  filters?: Filters;
+}) {
   const { start, end, page: p } = pageBounds(page);
-  const data = await sanityFetch<{ items: Publication[]; total: number }>(
-    publicationListQuery,
-    { start, end },
-    { tags: ["publication"] },
-  );
+  const q = publicationListQuery(filters);
+  const [data, facets] = await Promise.all([
+    sanityFetch<{ items: Publication[]; total: number }>(
+      q.query,
+      { ...q.params, start, end },
+      { tags: ["publication"] },
+    ),
+    buildFacets(lang, "publication", ["topic", "area", "tag", "year"]),
+  ]);
   const dict = getDictionary(lang);
   const totalPages = totalPagesFor(data.total);
+  const resultsLabel = `${data.total} ${data.total === 1 ? dict.common.result : dict.common.results}`;
 
   return (
     <>
@@ -33,9 +48,8 @@ export async function PublicationsListPage({ lang, page }: { lang: Lang; page: n
       />
       <Container className="py-12">
         <h1 className="font-serif text-4xl text-ink-900">{dict.nav.publications}</h1>
-        <p className="mt-2 text-ink-500">
-          {data.total} {data.total === 1 ? "item" : "itens"}
-        </p>
+
+        <FilterBar facets={facets} clearLabel={dict.common.clearFilters} resultsLabel={resultsLabel} />
 
         {data.items.length === 0 ? (
           <p className="mt-10 text-ink-500">{dict.common.noResults}</p>
@@ -66,6 +80,7 @@ export async function PublicationsListPage({ lang, page }: { lang: Lang; page: n
           totalPages={totalPages}
           basePath={localizedHref("publications", lang)}
           lang={lang}
+          query={filtersToQuery(filters)}
         />
       </Container>
     </>
