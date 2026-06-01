@@ -1,4 +1,4 @@
-# GGP — Grande Grupo de Pesquisa (Ensino de Física / UFG)
+# GGP Grande Grupo da Paçoca (Ensino de Física / UFG)
 
 Site institucional + repositório acadêmico do GGP. Substitui o Google Sites atual e centraliza publicações, teses, materiais didáticos, mídia e eventos do grupo. Bilíngue PT/EN.
 
