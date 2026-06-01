@@ -48,6 +48,8 @@
     "location": "Location",
     "online": "Online",
     "filters": "Filters",
+    "filterBy": "Filter",
+    "selectPlaceholder": "Select",
     "clearFilters": "Clear filters",
     "result": "result",
     "results": "results",
@@ -59,7 +61,12 @@
     "search": "Search",
     "searchPlaceholder": "Search the repository…",
     "searchResultsFor": "Results for",
-    "noQuery": "Type a term to search."
+    "noQuery": "Type a term to search.",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "toggleTheme": "Toggle light/dark theme",
+    "repository": "GGP repository"
   },
   "home": {
     "heroTitle": "Large Research Group",

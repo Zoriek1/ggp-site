@@ -3,6 +3,7 @@ import type { Lang } from "@/i18n/config";
 import { tField, getDictionary } from "@/i18n/dictionaries";
 import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
+import { PageHeader } from "@/components/PageHeader";
 import { Hreflang } from "@/components/Hreflang";
 import { sanityFetch } from "@/lib/sanity/client";
 import { pgpListQuery } from "@/lib/sanity/queries";
@@ -23,12 +24,12 @@ export async function PgpsListPage({ lang }: { lang: Lang }) {
       <Hreflang
         paths={{ pt: `/${segmentFor("pgps", "pt")}`, en: `/${segmentFor("pgps", "en")}` }}
       />
+      <PageHeader
+        eyebrow={dict.common.repository}
+        title={dict.nav.pgps}
+        count={`${pgps.length} ${pgps.length === 1 ? "PGP" : "PGPs"}`}
+      />
       <Container className="py-12">
-        <h1 className="font-serif text-4xl text-ink-900">{dict.nav.pgps}</h1>
-        <p className="mt-2 text-ink-500">
-          {pgps.length} {pgps.length === 1 ? "PGP" : "PGPs"}
-        </p>
-
         <PgpGroup lang={lang} title={dict.pgps.active} pgps={active} />
         <PgpGroup lang={lang} title={dict.pgps.forming} pgps={forming} />
         <PgpGroup lang={lang} title={dict.pgps.inactive} pgps={inactive} />
@@ -55,7 +56,7 @@ function PgpGroup({ lang, title, pgps }: { lang: Lang; title: string; pgps: PgpR
             <li key={p._id}>
               <Link
                 href={localizedHref("pgps", lang, slug)}
-                className="block h-full rounded-lg border border-ink-100 bg-white p-5 no-underline transition hover:border-ink-300"
+                className="block h-full rounded-lg border border-ink-100 bg-surface p-5 no-underline transition hover:border-ink-300"
               >
                 <p className="font-serif text-lg text-ink-900">{p.name}</p>
                 {p.longName && tField(p.longName, lang) && (

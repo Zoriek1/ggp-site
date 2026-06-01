@@ -101,7 +101,7 @@ export async function ThesisDetail({ lang, slug }: { lang: Lang; slug: string })
               href={pdf}
               target="_blank"
               rel="noreferrer"
-              className="rounded bg-brand-700 px-4 py-2 text-sm text-white no-underline hover:bg-brand-900"
+              className="rounded bg-brand-button px-4 py-2 text-sm text-white no-underline hover:bg-brand-button-hover"
             >
               {dict.common.download} PDF
             </a>

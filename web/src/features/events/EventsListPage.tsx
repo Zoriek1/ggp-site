@@ -2,6 +2,7 @@ import type { Lang } from "@/i18n/config";
 import { tField, getDictionary } from "@/i18n/dictionaries";
 import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
+import { PageHeader } from "@/components/PageHeader";
 import { Card } from "@/components/Card";
 import { Pagination } from "@/components/Pagination";
 import { FilterBar } from "@/components/FilterBar";
@@ -44,10 +45,9 @@ export async function EventsListPage({
       <Hreflang
         paths={{ pt: `/${segmentFor("events", "pt")}`, en: `/${segmentFor("events", "en")}` }}
       />
+      <PageHeader eyebrow={dict.common.repository} title={dict.nav.events} />
       <Container className="py-12">
-        <h1 className="font-serif text-4xl text-ink-900">{dict.nav.events}</h1>
-
-        <FilterBar facets={facets} clearLabel={dict.common.clearFilters} resultsLabel={resultsLabel} />
+        <FilterBar facets={facets} clearLabel={dict.common.clearFilters} resultsLabel={resultsLabel} filterByLabel={dict.common.filterBy} selectPlaceholder={dict.common.selectPlaceholder} />
 
         {data.items.length === 0 ? (
           <p className="mt-10 text-ink-500">{dict.common.noResults}</p>

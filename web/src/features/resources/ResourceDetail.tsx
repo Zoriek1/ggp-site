@@ -55,7 +55,7 @@ export async function ResourceDetail({ lang, slug }: { lang: Lang; slug: string 
           href={link}
           target="_blank"
           rel="noreferrer"
-          className="mt-8 inline-block rounded bg-brand-700 px-4 py-2 text-sm text-white no-underline"
+          className="mt-8 inline-block rounded bg-brand-button px-4 py-2 text-sm text-white no-underline hover:bg-brand-button-hover"
         >
           {dict.common.openExternal}
         </a>

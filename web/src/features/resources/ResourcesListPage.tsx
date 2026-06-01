@@ -3,6 +3,7 @@ import type { Lang } from "@/i18n/config";
 import { tField, getDictionary } from "@/i18n/dictionaries";
 import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
+import { PageHeader } from "@/components/PageHeader";
 import { Pagination } from "@/components/Pagination";
 import { FilterBar } from "@/components/FilterBar";
 import { Hreflang } from "@/components/Hreflang";
@@ -42,10 +43,9 @@ export async function ResourcesListPage({
       <Hreflang
         paths={{ pt: `/${segmentFor("resources", "pt")}`, en: `/${segmentFor("resources", "en")}` }}
       />
+      <PageHeader eyebrow={dict.common.repository} title={dict.nav.resources} />
       <Container className="py-12 max-w-4xl">
-        <h1 className="font-serif text-4xl text-ink-900">{dict.nav.resources}</h1>
-
-        <FilterBar facets={facets} clearLabel={dict.common.clearFilters} resultsLabel={resultsLabel} />
+        <FilterBar facets={facets} clearLabel={dict.common.clearFilters} resultsLabel={resultsLabel} filterByLabel={dict.common.filterBy} selectPlaceholder={dict.common.selectPlaceholder} />
 
         {data.items.length === 0 ? (
           <p className="mt-10 text-ink-500">{dict.common.noResults}</p>
@@ -62,7 +62,7 @@ export async function ResourcesListPage({
                   </p>
                   <p className="mt-1 font-serif text-lg text-ink-900">{tField(r.title, lang)}</p>
                   {tField(r.description, lang) && (
-                    <p className="text-sm text-ink-500 line-clamp-2">{tField(r.description, lang)}</p>
+                    <p className="text-sm text-ink-700 line-clamp-2">{tField(r.description, lang)}</p>
                   )}
                 </Link>
               </li>

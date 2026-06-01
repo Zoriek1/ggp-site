@@ -3,6 +3,10 @@ import { DEFAULT_LOCALE, LOCALES } from "./i18n/config";
 
 const PUBLIC_FILE = /\.(.*)$/;
 
+// Rotas de metadata geradas pelo Next (sem extensão) que NÃO devem receber
+// prefixo de idioma — senão o crawler recebe um 307 em vez da imagem.
+const METADATA_ROUTE = /^\/(opengraph-image|twitter-image|apple-icon|icon|manifest\.webmanifest)$/;
+
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
@@ -11,6 +15,7 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/api") ||
     pathname === "/sitemap.xml" ||
     pathname === "/robots.txt" ||
+    METADATA_ROUTE.test(pathname) ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next();
@@ -18,7 +23,11 @@ export function middleware(req: NextRequest) {
 
   const first = pathname.split("/")[1];
   if ((LOCALES as readonly string[]).includes(first)) {
-    return NextResponse.next();
+    // Propaga o idioma resolvido nos headers da REQUISIÇÃO para que o layout
+    // raiz (Server Component) o leia via headers() e defina <html lang>.
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-lang", first);
+    return NextResponse.next({ request: { headers: requestHeaders } });
   }
 
   const preferred = pickPreferredLocale(req.headers.get("accept-language"));

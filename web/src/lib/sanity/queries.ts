@@ -143,6 +143,24 @@ export const featuredPublicationsQuery = /* groq */ `
 }
 `;
 
+/** Publicações em destaque com fallback para as mais recentes (preenche a home). */
+export const homePublicationsQuery = /* groq */ `
+*[_type == "publication"] | order(featured desc, year desc, publishedDate desc) [0...6]{
+  ${publicationProjection}
+}
+`;
+
+/** Contagens por tipo para a faixa de estatísticas da home. */
+export const homeStatsQuery = /* groq */ `{
+  "publications": count(*[_type == "publication"]),
+  "theses": count(*[_type == "thesis"]),
+  "teachingMaterials": count(*[_type == "teachingMaterial"]),
+  "media": count(*[_type == "media"]),
+  "events": count(*[_type == "event"]),
+  "members": count(*[_type == "member"]),
+  "pgps": count(*[_type == "pgp"])
+}`;
+
 // Theses
 const thesisProjection = `
   _id, title, ${slugProjection} level, year, institution, program, summary,

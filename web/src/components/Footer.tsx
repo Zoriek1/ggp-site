@@ -18,7 +18,7 @@ export async function Footer({ lang }: { lang: Lang }) {
   const ig = settings?.social?.instagram;
 
   return (
-    <footer className="mt-16 border-t border-ink-100 bg-white">
+    <footer className="mt-16 border-t border-ink-100 bg-surface">
       <Container className="py-10 text-sm text-ink-500 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <p>
           © {new Date().getFullYear()} {siteName}. {dict.footer.rights}

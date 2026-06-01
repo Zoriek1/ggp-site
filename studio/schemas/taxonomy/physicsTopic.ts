@@ -1,11 +1,11 @@
 import { defineType } from "sanity";
-import { AtomIcon } from "@sanity/icons";
+import { ComponentIcon } from "@sanity/icons";
 
 export const physicsTopic = defineType({
   name: "physicsTopic",
   title: "Tópico de física",
   type: "document",
-  icon: AtomIcon,
+  icon: ComponentIcon,
   fields: [
     { name: "name", title: "Nome", type: "localizedString", validation: (R) => R.required() },
     { name: "slug", title: "Slug", type: "localizedSlug", validation: (R) => R.required() },

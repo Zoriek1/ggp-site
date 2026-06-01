@@ -1,4 +1,4 @@
-import type { Publication, Thesis, Member, EventItem, MediaItem, Pgp } from "@/lib/sanity/types";
+import type { Publication, Thesis, Member, EventItem, MediaItem, Pgp, LocalizedSlug } from "@/lib/sanity/types";
 import type { Lang } from "@/i18n/config";
 import { tField } from "@/i18n/dictionaries";
 import { localizedHref } from "@/i18n/routes";
@@ -6,6 +6,10 @@ import { env } from "@/lib/env";
 import { resolvePdf } from "@/lib/files";
 
 const ABS = (path: string) => `${env.siteUrl}${path}`;
+
+// slug may be absent on documents where it was never set; fall back to the _id.
+const slugSegment = (slug: LocalizedSlug | undefined, lang: Lang, fallback: string) =>
+  (lang === "en" ? slug?.en?.current : slug?.pt?.current) || fallback;
 
 const memberRef = (m: Pick<Member, "name">) => ({ "@type": "Person", name: m.name });
 
@@ -30,7 +34,7 @@ export const publicationJsonLd = (p: Publication, lang: Lang) => ({
       localizedHref(
         "publications",
         lang,
-        (lang === "en" ? p.slug.en?.current : p.slug.pt?.current) || p._id,
+        slugSegment(p.slug, lang, p._id),
       ),
     ),
   sameAs: [p.externalUrl, p.doi ? `https://doi.org/${p.doi}` : null].filter(Boolean),
@@ -56,7 +60,7 @@ export const thesisJsonLd = (t: Thesis, lang: Lang) => ({
       localizedHref(
         "theses",
         lang,
-        (lang === "en" ? t.slug.en?.current : t.slug.pt?.current) || t._id,
+        slugSegment(t.slug, lang, t._id),
       ),
     ),
   encoding: resolvePdf(t)
@@ -102,7 +106,7 @@ export const eventJsonLd = (e: EventItem, lang: Lang) => ({
       localizedHref(
         "events",
         lang,
-        (lang === "en" ? e.slug.en?.current : e.slug.pt?.current) || e._id,
+        slugSegment(e.slug, lang, e._id),
       ),
     ),
 });
@@ -125,7 +129,7 @@ export const pgpJsonLd = (p: Pgp, lang: Lang) => ({
       localizedHref(
         "pgps",
         lang,
-        (lang === "en" ? p.slug.en?.current : p.slug.pt?.current) || p._id,
+        slugSegment(p.slug, lang, p._id),
       ),
     ),
   sameAs: [p.social?.instagram, p.social?.telegram].filter(Boolean),
@@ -143,7 +147,7 @@ export const mediaJsonLd = (m: MediaItem, lang: Lang) => ({
       localizedHref(
         "media",
         lang,
-        (lang === "en" ? m.slug.en?.current : m.slug.pt?.current) || m._id,
+        slugSegment(m.slug, lang, m._id),
       ),
     ),
 });

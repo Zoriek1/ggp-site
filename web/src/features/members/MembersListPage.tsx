@@ -4,6 +4,7 @@ import type { Lang } from "@/i18n/config";
 import { getDictionary } from "@/i18n/dictionaries";
 import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
+import { PageHeader } from "@/components/PageHeader";
 import { Hreflang } from "@/components/Hreflang";
 import { sanityFetch } from "@/lib/sanity/client";
 import { memberListQuery } from "@/lib/sanity/queries";
@@ -23,9 +24,12 @@ export async function MembersListPage({ lang }: { lang: Lang }) {
       <Hreflang
         paths={{ pt: `/${segmentFor("members", "pt")}`, en: `/${segmentFor("members", "en")}` }}
       />
+      <PageHeader
+        eyebrow={dict.common.repository}
+        title={dict.nav.members}
+        count={`${members.length} ${members.length === 1 ? dict.common.result : dict.common.results}`}
+      />
       <Container className="py-12">
-        <h1 className="font-serif text-4xl text-ink-900">{dict.nav.members}</h1>
-
         <MemberGrid lang={lang} title={dict.members.active} members={active} />
         {inactive.length > 0 && (
           <MemberGrid lang={lang} title={dict.members.inactive} members={inactive} />

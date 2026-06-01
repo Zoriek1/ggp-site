@@ -3,6 +3,7 @@ import type { Lang } from "@/i18n/config";
 import { tField, getDictionary } from "@/i18n/dictionaries";
 import { localizedHref, segmentFor } from "@/i18n/routes";
 import { Container } from "@/components/Container";
+import { PageHeader } from "@/components/PageHeader";
 import { Hreflang } from "@/components/Hreflang";
 import { sanityFetch } from "@/lib/sanity/client";
 import { allResearchAreasQuery } from "@/lib/sanity/queries";
@@ -22,8 +23,12 @@ export async function ResearchAreasIndexPage({ lang }: { lang: Lang }) {
           en: `/${segmentFor("researchAreas", "en")}`,
         }}
       />
+      <PageHeader
+        eyebrow={dict.common.repository}
+        title={dict.nav.researchAreas}
+        count={areas.length > 0 ? `${areas.length} ${areas.length === 1 ? dict.common.result : dict.common.results}` : undefined}
+      />
       <Container className="py-12">
-        <h1 className="font-serif text-4xl text-ink-900">{dict.nav.researchAreas}</h1>
         {areas.length === 0 ? (
           <p className="mt-10 text-ink-500">{dict.common.noResults}</p>
         ) : (
@@ -32,7 +37,7 @@ export async function ResearchAreasIndexPage({ lang }: { lang: Lang }) {
               <li key={a._id}>
                 <Link
                   href={localizedHref("researchAreas", lang, slugFor(a.slug, lang, a._id))}
-                  className="block rounded border border-ink-100 bg-white px-4 py-3 no-underline hover:border-ink-300"
+                  className="block rounded border border-ink-100 bg-surface px-4 py-3 no-underline hover:border-ink-300"
                 >
                   {tField(a.name, lang)}
                 </Link>

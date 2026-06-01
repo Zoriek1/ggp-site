@@ -10,7 +10,7 @@ import {
   PackageIcon,
   CalendarIcon,
   TagIcon,
-  AtomIcon,
+  ComponentIcon,
   FolderIcon,
 } from "@sanity/icons";
 
@@ -79,7 +79,7 @@ export const deskStructure: StructureResolver = (S) =>
             .title("Taxonomias")
             .items([
               S.documentTypeListItem("researchArea").title("Áreas de pesquisa").icon(TagIcon),
-              S.documentTypeListItem("physicsTopic").title("Tópicos de física").icon(AtomIcon),
+              S.documentTypeListItem("physicsTopic").title("Tópicos de física").icon(ComponentIcon),
               S.documentTypeListItem("educationLevel").title("Níveis de ensino").icon(BookIcon),
               S.documentTypeListItem("tag").title("Tags livres").icon(TagIcon),
             ]),

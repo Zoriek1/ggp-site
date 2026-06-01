@@ -48,6 +48,8 @@
     "location": "Local",
     "online": "Online",
     "filters": "Filtros",
+    "filterBy": "Filtrar",
+    "selectPlaceholder": "Selecionar",
     "clearFilters": "Limpar filtros",
     "result": "resultado",
     "results": "resultados",
@@ -59,7 +61,12 @@
     "search": "Buscar",
     "searchPlaceholder": "Buscar no acervo…",
     "searchResultsFor": "Resultados para",
-    "noQuery": "Digite um termo para buscar."
+    "noQuery": "Digite um termo para buscar.",
+    "openMenu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "menu": "Menu",
+    "toggleTheme": "Alternar tema claro/escuro",
+    "repository": "Acervo GGP"
   },
   "home": {
     "heroTitle": "Grande Grupo de Pesquisa",
