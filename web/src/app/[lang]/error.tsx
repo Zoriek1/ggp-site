@@ -16,7 +16,6 @@ export default function Error({
   const isEn = pathname.startsWith("/en");
 
   useEffect(() => {
-    // eslint-disable-next-line no-console
     console.error(error);
   }, [error]);
 

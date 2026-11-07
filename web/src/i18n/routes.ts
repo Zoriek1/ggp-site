@@ -1,87 +1,47 @@
 import type { Lang } from "./config";
+import { field, type ContentRecord } from "@/lib/content/model";
+import { recordSection } from "@/lib/content/query";
 
-/**
- * Chaves canônicas das seções (internas) → segmento por idioma na URL.
- * Roteamento: middleware/page resolve um segmento da URL para uma chave canônica,
- * então o Next.js usa a chave para renderizar o conteúdo correto.
- */
-export const ROUTE_KEYS = [
-  "about",
-  "members",
-  "pgps",
-  "publications",
-  "theses",
-  "teachingMaterials",
-  "media",
-  "resources",
-  "events",
-  "topics",
-  "researchAreas",
-  "contact",
-] as const;
-export type RouteKey = (typeof ROUTE_KEYS)[number];
-
-export const SEGMENTS: Record<RouteKey, Record<Lang, string>> = {
-  about:             { pt: "sobre",              en: "about" },
-  members:           { pt: "membros",            en: "members" },
-  pgps:              { pt: "pgps",               en: "pgps" },
-  publications:      { pt: "publicacoes",        en: "publications" },
-  theses:            { pt: "teses",              en: "theses" },
-  teachingMaterials: { pt: "materiais",          en: "materials" },
-  media:             { pt: "midia",              en: "media" },
-  resources:         { pt: "recursos",           en: "resources" },
-  events:            { pt: "eventos",            en: "events" },
-  topics:            { pt: "topicos",            en: "topics" },
-  researchAreas:     { pt: "areas-de-pesquisa",  en: "research-areas" },
-  contact:           { pt: "contato",            en: "contact" },
-};
-
-/** Inverso: segmento (em qualquer idioma) → chave canônica. */
-const SEGMENT_TO_KEY = (() => {
-  const map = new Map<string, RouteKey>();
-  for (const key of ROUTE_KEYS) {
-    map.set(SEGMENTS[key].pt, key);
-    map.set(SEGMENTS[key].en, key);
-  }
-  return map;
-})();
-
+export const SEGMENTS = {
+  about: { pt: "sobre", en: "about" },
+  contact: { pt: "contato", en: "contact" },
+  pgps: { pt: "pgps", en: "pgps" },
+  publications: { pt: "publicacoes", en: "publications" },
+  blog: { pt: "blog", en: "blog" },
+  guides: { pt: "guias", en: "guides" },
+  areas: { pt: "areas", en: "areas" },
+  keywords: { pt: "palavras-chave", en: "keywords" },
+  search: { pt: "busca", en: "search" },
+  pages: { pt: "paginas", en: "pages" },
+} as const;
+export type RouteKey = keyof typeof SEGMENTS;
+export const ROUTE_KEYS = Object.keys(SEGMENTS) as RouteKey[];
+export const segmentFor = (key: RouteKey, lang: Lang) => SEGMENTS[key][lang];
 export const resolveSegment = (segment: string): RouteKey | null =>
-  SEGMENT_TO_KEY.get(segment) ?? null;
-
-export const segmentFor = (key: RouteKey, lang: Lang): string => SEGMENTS[key][lang];
-
-/** Segmento da página de busca por idioma. Rota especial, fora do union RouteKey. */
-export const SEARCH_SEGMENTS: Record<Lang, string> = { pt: "busca", en: "search" };
-export const isSearchSegment = (segment: string, lang: Lang): boolean =>
-  SEARCH_SEGMENTS[lang] === segment;
-
-/** Constrói href localizado. Use isto em vez de concatenar strings manualmente. */
-export const localizedHref = (
+  ROUTE_KEYS.find((key) =>
+    Object.values(SEGMENTS[key]).some((value) => value === segment),
+  ) || null;
+export function localizedHref(
   key: RouteKey,
   lang: Lang,
   slug?: string,
   params?: Record<string, string | number>,
-): string => {
-  const seg = segmentFor(key, lang);
-  const base = slug ? `/${lang}/${seg}/${slug}` : `/${lang}/${seg}`;
-  if (!params) return base;
-  const qs = new URLSearchParams(
-    Object.entries(params).map(([k, v]) => [k, String(v)]),
+): string {
+  const base = `/${lang}/${segmentFor(key, lang)}${slug ? `/${slug}` : ""}`;
+  const query = new URLSearchParams(
+    Object.entries(params || {}).map(([k, v]) => [k, String(v)]),
   ).toString();
-  return qs ? `${base}?${qs}` : base;
-};
+  return query ? `${base}?${query}` : base;
+}
+export function contentHref(record: ContentRecord, lang: Lang): string {
+  const section = recordSection(record);
+  return localizedHref(
+    section,
+    lang,
+    record.collection === "pages" && record.pageKind !== "free"
+      ? undefined
+      : field(record.slug, lang),
+  );
+}
 
-/** Mapa de tipo Sanity → chave de rota (para JSON-LD e sitemap). */
-export const TYPE_TO_KEY: Record<string, RouteKey> = {
-  publication: "publications",
-  thesis: "theses",
-  teachingMaterial: "teachingMaterials",
-  media: "media",
-  resource: "resources",
-  event: "events",
-  member: "members",
-  pgp: "pgps",
-  physicsTopic: "topics",
-  researchArea: "researchAreas",
-};
+export const SEARCH_SEGMENTS = SEGMENTS.search;

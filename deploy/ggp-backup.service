@@ -1,0 +1,12 @@
+[Unit]
+Description=Backup das mídias do portal GGP
+
+[Service]
+Type=oneshot
+User=ggp
+Group=ggp
+EnvironmentFile=/etc/ggp/portal.env
+ExecStart=/usr/bin/node /srv/ggp/current/web/scripts/media-backup.mjs backup ${MEDIA_DIR} ${BACKUP_DIR}
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true

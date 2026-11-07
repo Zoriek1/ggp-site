@@ -1,156 +1,124 @@
-# Deploy — Site do GGP
+# Desenvolvimento, implantação e recuperação
 
-## Ambiente de desenvolvimento (atual)
+## Requisitos
 
-```powershell
-# 1. Instalar dependências
-cd web;     npm install
-cd ../studio; npm install
+Node.js 22.12+, npm e GNU tar. O pacote mantém Next.js standalone. O destino pode ser UFG ou outro servidor Linux com TLS e Nginx; o repositório não contém credenciais ou uma implantação ativa configurada.
 
-# 2. Configurar Sanity (uma vez)
-cd studio
-npx sanity login                 # autenticar no Sanity (gratuito)
-npx sanity init --env            # cria projeto e gera .env
-
-# Copiar PROJECT_ID gerado e preencher web/.env.local:
-#   NEXT_PUBLIC_SANITY_PROJECT_ID=<id>
-#   NEXT_PUBLIC_SANITY_DATASET=production
-
-# 3. Rodar (em dois terminais)
-cd studio; npm run dev   # http://localhost:3333 — painel de edição
-cd web;    npm run dev   # http://localhost:3000 — site público
-```
-
-## Deploy futuro em `GGP.ufg.br`
-
-Pré-requisitos negociados com o CTI/UFG:
-
-- Servidor Linux com **Node.js 20+**.
-- Domínio `ggp.ufg.br` apontando para o servidor.
-- Nginx reverse proxy.
-- Certificado TLS (Let's Encrypt ou o que a UFG provê).
-- Acesso para fazer deploy (Git ou rsync).
-
-### Build do site (Next.js standalone)
-
-`next.config.ts` já está com `output: "standalone"`. Build gera tudo que precisa:
+## Preparar a conta
 
 ```bash
 cd web
 npm ci
-npm run build
-# .next/standalone/ contém o servidor; .next/static/ os assets; public/ os arquivos públicos.
+cp .env.example .env.local
+# Em Bash, leia sem ecoar nem colocar a senha no histórico:
+read -rsp 'Senha do painel (mínimo 12 caracteres): ' PANEL_PASSWORD
+printf '\n'
+printf '%s' "$PANEL_PASSWORD" | npm run --silent password:hash
+unset PANEL_PASSWORD
+node -e 'process.stdout.write(require("node:crypto").randomBytes(32).toString("hex") + "\n")'
 ```
 
-### Como rodar no servidor
+Copie o hash scrypt para `PANEL_USERS_JSON` e o segredo aleatório para `SESSION_SECRET`. Exemplo de formato, usando o hash real gerado:
+
+```
+PANEL_USERS_JSON='[{"id":"grupo","username":"grupo","passwordHash":"scrypt:SALT:HASH"}]'
+SESSION_SECRET=SEGREDO_ALEATORIO_GERADO
+```
+
+Não use os marcadores acima como credenciais. O painel sem configuração recusa o acesso. Para adicionar contas, acrescente entradas com IDs e nomes únicos ao array; todas têm as mesmas permissões. Reinicie o serviço após mudanças. Remover uma conta, alterar seu hash ou trocar o segredo invalida suas sessões. Não há cadastro público, recuperação de senha por e-mail nem cargos nesta versão.
+
+## Desenvolvimento local
+
+Em `web/.env.local`, use `CONTENT_DRIVER=local`, `CONTENT_ALLOW_LOCAL_WRITES=true` e os valores de acesso gerados. Execute `npm run dev`. O portal abre em `/pt` ou `/en`; o painel em `/admin`.
+
+A escrita local é apenas um recurso de desenvolvimento: não envia commits e é bloqueada com `NODE_ENV=production`. Para validar produção use a integração GitHub em uma branch de homologação. Os arquivos iniciais já estão em `content/`; `npm run seed:content` apenas cria arquivos ausentes.
+
+## Integração GitHub e configuração de produção
+
+Crie um token granular limitado ao repositório escolhido, com **Contents: Read and write**. Ele precisa poder atualizar a branch configurada; regras que exijam PR/aprovação são incompatíveis com publicação direta. Guarde o token exclusivamente no servidor.
+
+Crie `/etc/ggp/portal.env`, legível apenas pelo responsável e pelo usuário do serviço. Configure:
+
+```
+SITE_URL=https://ggp.ufg.br
+NEXT_PUBLIC_SITE_URL=https://ggp.ufg.br
+CONTENT_DRIVER=github
+GITHUB_REPOSITORY=Zoriek1/ggp-site
+GITHUB_BRANCH=main
+GITHUB_TOKEN=TOKEN_REAL
+CONTENT_ROOT=/srv/ggp/current
+MEDIA_DIR=/var/lib/ggp/media
+CONTENT_CACHE_DIR=/var/lib/ggp/cache
+BACKUP_DIR=/var/backups/ggp
+PANEL_USERS_JSON='[{"id":"grupo","username":"grupo","passwordHash":"HASH_REAL"}]'
+SESSION_SECRET=SEGREDO_REAL
+```
+
+O domínio acima é o destino previsto no projeto; substitua pelo destino efetivamente disponibilizado. `SITE_URL` é a origem autorizada para gravações e a base das URLs. Passe a mesma URL durante a compilação para as metatags. Use HTTPS em produção, pois o cookie é Secure. Publique os arquivos iniciais e o código na branch antes do primeiro boot. Se o Git não estiver disponível e não houver cache válido, corrija a integração antes de abrir o serviço.
+
+**Os arquivos de rascunho são públicos no Git; uploads também têm URL pública.** Não há garantia de remoção das versões anteriores ao arquivar ou retirar uma publicação.
+
+## Compilar e distribuir
 
 ```bash
-# Estrutura mínima no servidor:
-#   /var/www/ggp/web/
-#     ├─ .next/static/
-#     ├─ public/
-#     └─ server.js   (vem do standalone)
-
-cd /var/www/ggp/web
-NODE_ENV=production \
-NEXT_PUBLIC_SANITY_PROJECT_ID=xxx \
-NEXT_PUBLIC_SANITY_DATASET=production \
-NEXT_PUBLIC_SITE_URL=https://ggp.ufg.br \
-PORT=3000 \
-node server.js
+cd web
+npm ci
+npm run typecheck
+npm run lint
+npm test
+npm run build
 ```
 
-Recomendado rodar via **systemd** (ou PM2). Exemplo de unit:
+Execute `npm run package:release -- /caminho/para/nova-release` para gerar uma release completa, incluindo assets, scripts operacionais e exemplos de serviço. O destino deve ser uma pasta nova. O empacotador exclui arquivos de ambiente; configure-os externamente no servidor.
 
-```ini
-# /etc/systemd/system/ggp-web.service
-[Unit]
-Description=GGP website (Next.js)
-After=network.target
+O build inclui a raiz de conteúdo e gera `.next/standalone/web/server.js`. Copie **todo o conteúdo** de `.next/standalone/` para uma pasta de release, preservando a estrutura. Copie também `.next/static/` para `web/.next/static/` dentro dela. Se houver `web/public/`, copie para o mesmo caminho na release. Na montagem manual, inclua também `web/scripts/media-backup.mjs` e os exemplos de `deploy/`. Não coloque mídias ou cache dentro da release.
 
-[Service]
-Type=simple
-User=www-data
-WorkingDirectory=/var/www/ggp/web
-EnvironmentFile=/var/www/ggp/web/.env.production
-ExecStart=/usr/bin/node server.js
-Restart=on-failure
+Execute com o diretório de trabalho `web/` da release:
 
-[Install]
-WantedBy=multi-user.target
+```bash
+NODE_ENV=production HOSTNAME=127.0.0.1 PORT=3000 node server.js
 ```
 
-### Nginx reverse proxy
+Forneça as variáveis ao processo pelo gerenciador de serviço. `npm start` não é o comando da distribuição standalone.
 
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name ggp.ufg.br;
+Crie um usuário de serviço `ggp`, os diretórios de mídia/cache com permissão de escrita para ele e o arquivo de ambiente. Garanta que esse usuário consiga ler a release completa (ajuste proprietário/grupo na cópia, incluindo arquivos que chegaram com permissão restrita). Use `deploy/ggp.service` como unit systemd e o trecho de `deploy/nginx.conf` no virtual host TLS. O Node fica restrito a localhost; o Nginx sobrescreve `X-Real-IP`. A configuração inicial considera uma instância Node.
 
-    ssl_certificate     /etc/letsencrypt/live/ggp.ufg.br/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/ggp.ufg.br/privkey.pem;
+Faça o deploy em pastas de release e use `/srv/ggp/current` como link para a versão ativa. Troque o link somente após a validação e reinicie o serviço. Preserve a release anterior. Alterações editoriais não exigem novo build; mudanças no código exigem nova release.
 
-    location /_next/static/ {
-        alias /var/www/ggp/web/.next/static/;
-        access_log off;
-        expires 365d;
-        add_header Cache-Control "public, immutable";
-    }
+## Homologação e verificação
 
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-
-server {
-    listen 80;
-    server_name ggp.ufg.br;
-    return 301 https://$host$request_uri;
-}
+```bash
+cd web
+npm run test:e2e
 ```
 
-### Sanity Studio — duas opções
+O teste usa Chromium em `/usr/bin/chromium` (ou `CHROMIUM_PATH`), conta descartável e cópia dos dados em `work/e2e/`. Confere login, proteção das APIs, criação de áreas/PGPs, upload, publicação, guia, rascunhos, idiomas e sitemaps. Os testes Git simulam a API sem fazer commits externos; antes de produção, confira uma publicação real em branch de homologação com o token configurado.
 
-1. **Hospedagem grátis Sanity**: `cd studio && npx sanity deploy` → fica em `ggp.sanity.studio` (ou nome escolhido). Recomendado.
-2. **Subdiretório do próprio site**: `cd studio && npm run build` e servir `studio/dist/` em `https://ggp.ufg.br/admin`. Mais trabalho, sem ganho real.
+Na homologação, valide também atualização feita diretamente no Git após 60 segundos, reinício com GitHub temporariamente indisponível e cache válido, persistência das mídias entre releases e logs do serviço. O diário registra tipo/status da falha sem tokens, senhas ou texto completo dos documentos.
 
-### Webhook de revalidação (ISR on-demand)
+## Importar exportação Sanity
 
-No projeto Sanity → Manage → API → Webhooks, criar:
+Extraia o arquivo NDJSON da exportação e execute numa cópia de trabalho:
 
-- **URL**: `https://ggp.ufg.br/api/revalidate`
-- **Dataset**: `production`
-- **Trigger on**: Create, Update, Delete
-- **Filter**: `_type in ["publication","thesis","teachingMaterial","media","resource","event","member","page","siteSettings"]`
-- **Projection**: `{ _type, "slug": slug.pt.current }`
-- **HTTP method**: POST
-- **HTTP Headers**: nenhum
-- **Secret**: o mesmo valor de `SANITY_REVALIDATE_SECRET` no `.env.production` do site.
+```bash
+cd web
+MEDIA_DIR=/caminho/persistente/media npm run import:sanity -- /caminho/data.ndjson
+```
 
-Assim conteúdo editado no Studio aparece no site em segundos.
+O importador converte os tipos desta versão, transforma Portable Text em Markdown, resolve autores para nomes e baixa assets do CDN Sanity para o armazenamento de mídias. Registros incompletos ficam em rascunho; tipos adiados aparecem no relatório do terminal. Arquivos existentes interrompem a operação para evitar sobrescrita; use `--overwrite` somente após comparar os dados. A importação é local: revise o diff e só então versione os arquivos. O acervo remoto atual não é consultado automaticamente.
 
-### Por que NÃO usamos `next export`
+## Backup e restauração
 
-`next export` (gera site 100% estático) **quebra**:
-- ISR (`revalidate`),
-- rotas de webhook (`/api/revalidate`),
-- sitemap dinâmico,
-- alguns recursos de `next/image`.
+O Git preserva os textos; mantenha também uma cópia independente do repositório. Para mídias:
 
-Como o site é repositório que cresce, ISR é essencial. `output: "standalone"` é o caminho.
+```bash
+cd web
+node scripts/media-backup.mjs backup /var/lib/ggp/media /var/backups/ggp
+node scripts/media-backup.mjs restore /var/backups/ggp/media-DATA.tar.gz /var/lib/ggp/media-restaurada
+```
 
-## Checklist antes do go-live
+O backup gera checksum. A restauração valida checksum, caminhos, tipos de entrada e hashes dos arquivos antes de copiá-los. Teste a restauração em outro diretório e aponte temporariamente a homologação para ele. Não apague o armazenamento original durante o teste.
 
-- [ ] `NEXT_PUBLIC_SITE_URL` aponta para o domínio final.
-- [ ] Webhook de revalidação configurado e testado.
-- [ ] `robots.txt` permite indexação (`Allow: /`).
-- [ ] Sitemap aparece em `https://ggp.ufg.br/sitemap.xml` e responde 200.
-- [ ] Google Search Console: propriedade adicionada e sitemap submetido.
-- [ ] Google Scholar: pelo menos uma publicação com `citation_*` tags validada via Scholar Inspector.
-- [ ] Lighthouse ≥ 90 em Performance, ≥ 95 em SEO, ≥ 90 em Acessibilidade.
-- [ ] Backup do dataset Sanity agendado (`sanity dataset export production backup.tar.gz`, semanal).
+Os exemplos `deploy/ggp-backup.service` e `deploy/ggp-backup.timer` agendam o backup diariamente às 03h de São Paulo, com atraso aleatório de até 15 minutos. Configure `BACKUP_DIR`, crie-o com permissão para o usuário `ggp`, instale as units e habilite `ggp-backup.timer`. Alternativamente use o cron. Copie os arquivos e checksums para um armazenamento independente do host e defina retenção conforme o espaço disponível. Preserve o cache e a configuração secreta separadamente, com acesso restrito. Mídias não são removidas automaticamente ao desvincular um arquivo.
+
+Para reverter código, aponte `current` para a release anterior e reinicie. Para reverter conteúdo, use um commit de reversão dos registros envolvidos; confira as relações e permita que o portal carregue o snapshot validado. Não force a branch. Para imagens/PDFs perdidos, restaure os arquivos com seus nomes originais por hash.

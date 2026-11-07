@@ -1,0 +1,30 @@
+id: page-about
+collection: pages
+title:
+  pt: Sobre
+  en: About
+slug:
+  pt: sobre
+  en: about
+summary:
+  pt: Coletivo de pesquisa em ensino de física na UFG, organizado em Pequenos
+    Grupos de Pesquisa (PGPs).
+  en: Physics education research collective at UFG, organized into Small Research
+    Groups (PGPs).
+kind: text
+authors: []
+pgpIds: []
+areaIds: []
+keywordIds: []
+selectedIds: []
+institution: ""
+venue: ""
+doi: ""
+externalUrl: ""
+attachments: []
+featured: false
+archived: false
+pageKind: about
+contactEmail: ""
+links: []
+updatedAt: 2026-06-01T04:02:33.000Z

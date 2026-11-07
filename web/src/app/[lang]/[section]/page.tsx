@@ -1,90 +1,89 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { isLang, type Lang } from "@/i18n/config";
-import { getDictionary } from "@/i18n/dictionaries";
-import { resolveSegment, segmentFor, isSearchSegment, type RouteKey } from "@/i18n/routes";
-
-import { AboutPage } from "@/features/institutional/AboutPage";
-import { ContactPage } from "@/features/institutional/ContactPage";
-import { MembersListPage } from "@/features/members/MembersListPage";
-import { PgpsListPage } from "@/features/pgps/PgpsListPage";
-import { PublicationsListPage } from "@/features/publications/PublicationsListPage";
-import { ThesesListPage } from "@/features/theses/ThesesListPage";
-import { TeachingMaterialsListPage } from "@/features/teaching-materials/TeachingMaterialsListPage";
-import { MediaListPage } from "@/features/media/MediaListPage";
-import { ResourcesListPage } from "@/features/resources/ResourcesListPage";
-import { EventsListPage } from "@/features/events/EventsListPage";
-import { TopicsIndexPage } from "@/features/topics/TopicsIndexPage";
-import { ResearchAreasIndexPage } from "@/features/research-areas/ResearchAreasIndexPage";
-import { SearchPage } from "@/features/search/SearchPage";
-import { buildMetadataForList } from "@/lib/seo/metadata";
-import { parseFilters, type RawSearchParams } from "@/lib/discovery/filters";
-
-type RouteParams = { lang: string; section: string };
-type SearchParams = RawSearchParams;
-
-// Alguns renderers ignoram `page` — TS aceita passar a prop extra via cast.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ListRenderer = React.ComponentType<any>;
-
-const PAGE_RENDERERS: Record<RouteKey, ListRenderer> = {
-  about: AboutPage,
-  contact: ContactPage,
-  members: MembersListPage,
-  pgps: PgpsListPage,
-  publications: PublicationsListPage,
-  theses: ThesesListPage,
-  teachingMaterials: TeachingMaterialsListPage,
-  media: MediaListPage,
-  resources: ResourcesListPage,
-  events: EventsListPage,
-  topics: TopicsIndexPage,
-  researchAreas: ResearchAreasIndexPage,
+import { notFound, permanentRedirect } from "next/navigation";
+import { isLang } from "@/i18n/config";
+import { resolveSegment, segmentFor } from "@/i18n/routes";
+import {
+  Detail,
+  Listing,
+  loadPortal,
+  sectionNames,
+  type SearchParams,
+} from "@/features/portal/Portal";
+import { detailMetadata, listMetadata } from "@/features/portal/metadata";
+import { Container } from "@/components/Container";
+const aliases: Record<string, string> = {
+  "areas-de-pesquisa": "areas",
+  "research-areas": "areas",
+  topicos: "palavras-chave",
+  topics: "keywords",
 };
-
+type Params = { lang: string; section: string };
+export const dynamic = "force-dynamic";
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<RouteParams>;
+  params: Promise<Params>;
 }): Promise<Metadata> {
   const { lang, section } = await params;
   if (!isLang(lang)) return {};
-  if (isSearchSegment(section, lang)) {
-    return { title: getDictionary(lang).common.search, robots: { index: false, follow: false } };
-  }
   const key = resolveSegment(section);
   if (!key) return {};
-  // hreflang canônico: redireciona o EN para o segmento traduzido se vier no idioma errado
-  if (segmentFor(key, lang) !== section) return {};
-  return buildMetadataForList({ key, lang });
+  if (key === "about" || key === "contact") {
+    const record = (await loadPortal()).find(
+      (r) => r.collection === "pages" && r.pageKind === key,
+    );
+    if (record) return detailMetadata(record, lang);
+  }
+  return {
+    ...listMetadata(key, sectionNames[lang][key], lang),
+    ...(key === "search" ? { robots: { index: false } } : {}),
+  };
 }
-
-export default async function SectionPage({
+export default async function Page({
   params,
   searchParams,
 }: {
-  params: Promise<RouteParams>;
+  params: Promise<Params>;
   searchParams: Promise<SearchParams>;
 }) {
   const { lang, section } = await params;
-  const sp = await searchParams;
   if (!isLang(lang)) notFound();
-
-  if (isSearchSegment(section, lang)) {
-    const qRaw = Array.isArray(sp.q) ? sp.q[0] : sp.q;
-    return <SearchPage lang={lang} q={(qRaw ?? "").trim()} />;
-  }
-
+  if (aliases[section]) permanentRedirect(`/${lang}/${aliases[section]}`);
   const key = resolveSegment(section);
-  if (!key) notFound();
-
-  // Se o usuário acessar com o segmento do OUTRO idioma (ex.: /pt/publications),
-  // 404 (o middleware do switcher emite a URL correta).
-  if (segmentFor(key, lang) !== section) notFound();
-
-  const Renderer = PAGE_RENDERERS[key];
-  const pageRaw = Array.isArray(sp.page) ? sp.page[0] : sp.page;
-  const page = Math.max(1, parseInt(pageRaw ?? "1", 10) || 1);
-  const filters = parseFilters(sp);
-  return <Renderer lang={lang} page={page} filters={filters} />;
+  if (!key || segmentFor(key, lang) !== section) notFound();
+  if (key === "about" || key === "contact") {
+    const records = await loadPortal();
+    const record = records.find(
+      (r) => r.collection === "pages" && r.pageKind === key,
+    );
+    if (record) return <Detail record={record} lang={lang} />;
+    const settings = records.find((r) => r.collection === "settings");
+    return (
+      <Container className="max-w-3xl py-12">
+        <h1 className="font-serif text-4xl">{sectionNames[lang][key]}</h1>
+        <div className="mt-7 space-y-4">
+          {settings?.contactEmail && (
+            <p>
+              <a href={`mailto:${settings.contactEmail}`}>
+                {settings.contactEmail}
+              </a>
+            </p>
+          )}
+          {settings?.links.map((link) => (
+            <p key={link.url}>
+              <a href={link.url}>{link.label}</a>
+            </p>
+          ))}
+          {!settings?.contactEmail && !settings?.links.length && (
+            <p>
+              {lang === "pt"
+                ? "As informações de contato ainda não foram cadastradas."
+                : "Contact information has not been added yet."}
+            </p>
+          )}
+        </div>
+      </Container>
+    );
+  }
+  return <Listing lang={lang} section={key} params={await searchParams} />;
 }

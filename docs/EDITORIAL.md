@@ -1,110 +1,46 @@
-# Política Editorial — Site do GGP
+# Publicação no portal GGP
 
-Este documento define como o conteúdo do site é criado, revisado e publicado. Ele existe para o site **não virar um Google Sites moderno**: sem ele, o acervo perde consistência em poucos meses.
+## Acesso e autoria
 
-Toda decisão de produto sobre o site deve respeitar este documento. Quando algo aqui ficar desatualizado, atualize antes de publicar conteúdo novo no padrão antigo.
+O painel começa com uma conta compartilhada por professores e alunos. Todas as contas têm as mesmas permissões: criar, editar, salvar rascunhos, publicar, retirar publicações e arquivar. Não há aprovação por cargo. Contas adicionais podem ser configuradas pelo responsável pelo servidor, sem perfis públicos de membros.
 
-## 1. Papéis
+O usuário conectado não determina os autores. Preencha os nomes no campo **Autores — um por linha**, na ordem correta. O commit registra a conta que fez a operação; com uma conta compartilhada, não é possível distinguir seus usuários pelo histórico.
 
-| Papel | Responsabilidade | Permissão no Sanity |
-|---|---|---|
-| **Editor-chefe** (coordenador) | Aprova publicação, define taxonomias, autoriza novas tags | Administrator |
-| **Editor** (pesquisador sênior) | Cria e revisa conteúdo de qualquer tipo | Editor |
-| **Contribuidor** (aluno, colaborador) | Cria conteúdo em rascunho; não publica diretamente | Contributor |
+## O que publicar
 
-### Workflow de publicação
+- **Acervo:** artigos, textos e materiais, com leitura no site, PDF ou referência externa.
+- **Blog:** posts e comunicados.
+- **PGPs:** apresentação, instituição e contatos; os conteúdos aparecem por associação.
+- **Guias:** introdução e agregação temática de leituras.
+- **Páginas:** sobre, contato e páginas livres.
 
-1. Contribuidor cria documento em **draft** (não publicado).
-2. Editor revisa: título, abstract, taxonomias, imagens, PT e EN.
-3. Editor-chefe (ou editor com delegação) publica.
+Artigos exigem pelo menos um PGP. Itens do acervo exigem área do conhecimento e autoria. Conteúdos gerais do GGP podem ser publicados como textos, posts ou comunicados sem PGP associado.
 
-## 2. Convenções de título
+## Fluxo
 
-- **PT**: capitalização de frase (só primeira palavra e nomes próprios em maiúscula).
-  - Ex.: "Sequência didática sobre eletromagnetismo no ensino médio"
-- **EN**: Title Case.
-  - Ex.: "Teaching Sequence on Electromagnetism in High School"
-- Sem ponto final.
-- Máximo **120 caracteres** (corta bem em listagens e Google).
+1. Se necessário, publique primeiro as áreas, palavras-chave e PGPs que serão selecionados.
+2. Crie o conteúdo, informe autores e associe os registros pertinentes.
+3. Escreva em português; a versão inglesa é opcional. O portal usa português quando falta tradução.
+4. Envie arquivos, descreva as imagens e confira a prévia.
+5. **Salvar rascunho** guarda as alterações sem substituir a versão pública anterior.
+6. **Publicar** valida o registro e confirma um commit no Git antes de atualizar o portal.
 
-## 3. Resumos / Abstracts
+Se ocorrer conflito ou falha de rede, o texto permanece no editor. Baixe uma cópia antes de recarregar e compare com a versão mais recente. Publicação recusada não aparece como concluída.
 
-- 150–300 palavras.
-- Texto corrido, sem listas, sem títulos.
-- **Sem fórmulas LaTeX** no abstract (renderização inconsistente em metadados; coloque fórmulas no corpo).
-- Primeira frase deve dar contexto suficiente para alguém decidir se vai ler.
+**Retirar de publicação** preserva o texto como rascunho. Registros com dependências publicadas precisam ter seus vínculos removidos primeiro. **Arquivar** oculta o registro das listagens e preserva sua identidade; pode ser republicado pelo painel. Evite arquivar áreas e grupos ainda usados sem revisar os efeitos na navegação.
 
-## 4. Imagens
+## Guias e palavras-chave
 
-| Uso | Aspecto | Mínimo | Notas |
-|---|---|---|---|
-| Foto de membro | 1:1 | 600x600 | Hotspot definido, fundo neutro |
-| Capa de publicação/material | 16:9 | 1280x720 | Opcional |
-| Hero / banner de evento | 16:9 | 1920x1080 | |
-| Thumbnail de mídia | 16:9 | 640x360 | YouTube gera automaticamente |
-| Logo | SVG | — | + PNG 512x512 fallback |
+Use etiquetas cadastradas, evitando sinônimos duplicados. Um guia inclui conteúdos publicados com **qualquer uma** das palavras-chave escolhidas, de todos os PGPs. Leituras manuais aparecem primeiro, na ordem definida; a agregação automática vem depois, ordenada por data, sem repetição. Sem palavras-chave, o guia mostra somente as leituras manuais. Rascunhos e itens arquivados não são agregados.
 
-Regras:
-- **Alt text obrigatório em PT e EN**. Descreva o que aparece e por que importa para o contexto.
-- Evite texto embutido na imagem — quebra acessibilidade e i18n.
-- Sem watermarks de bancos de imagem.
+## Arquivos e referências
 
-## 5. Tags e tópicos
+Imagens JPEG, PNG e WebP e documentos PDF de até 20 MB podem ser enviados. Texto alternativo é obrigatório nas imagens. PDFs devem conter texto pesquisável sempre que possível. DOI é opcional e validado quando informado. Para recursos já hospedados, prefira a URL institucional original.
 
-- **Use as taxonomias existentes** (`physicsTopic`, `researchArea`, `educationLevel`, `tag`). Sempre referência, nunca string livre.
-- Criar nova tag/tópico **requer aprovação do editor-chefe**. Antes de criar, busque variações já existentes (ex.: "mecânica", "Mecânica Clássica", "Física Mecânica" — uma só).
-- Cada conteúdo deve ter **pelo menos 1 tópico de física** e, quando aplicável, **1 área de pesquisa**.
+Arquivos removidos de um texto continuam no armazenamento para preservar links e o histórico; esta versão não faz limpeza automática. O backup das mídias é separado do Git.
 
-### Lista canônica de tópicos de física (ponto de partida — expandir via editor-chefe)
+## Visibilidade
 
-- Mecânica
-- Termodinâmica
-- Eletromagnetismo
-- Óptica
-- Ondas e Acústica
-- Física Moderna
-- Física Quântica
-- Relatividade
-- Astronomia e Astrofísica
-- História e Filosofia da Ciência
-- Ensino e Aprendizagem de Física
+**Textos em rascunho e histórico são públicos no repositório Git. Os uploads também possuem URL pública.** Não use este portal para documentos confidenciais. As contas controlam a edição, não a confidencialidade dos arquivos.
 
-### Níveis de ensino
-
-- Fundamental I (1º–5º ano)
-- Fundamental II (6º–9º ano)
-- Ensino Médio
-- Ensino Superior — Graduação
-- Pós-graduação
-- Formação de Professores
-
-## 6. Idioma
-
-- **PT é obrigatório** em todos os campos traduzíveis.
-- **EN é fortemente recomendado**, especialmente para publicações com alcance internacional. Pode ficar vazio — o frontend faz fallback para PT com indicador discreto de "tradução pendente".
-- Não traduza nomes próprios, instituições ou siglas oficiais.
-
-## 7. DOI e identificadores
-
-- **DOI obrigatório** para publicações já aceitas/publicadas em periódico ou anais.
-- **Opcional** para preprints e working papers — usar campo `venue` para indicar onde está disponível.
-- **ORCID recomendado** para todo membro pesquisador.
-- **Link Lattes** recomendado para membros brasileiros.
-
-## 8. PDFs e arquivos
-
-- Sempre que possível, PDF original do autor (texto pesquisável, não scan).
-- Tamanho máximo recomendado: 20 MB. Acima disso, hospedar externamente e usar campo `pdfUrl`.
-- Para teses/dissertações antigas só disponíveis em scan, OK — mas marcar nas tags.
-
-## 9. Revisão periódica
-
-- A cada **6 meses**, o editor-chefe revisa o acervo:
-  - Links quebrados (`pdfUrl`, `lattesUrl`, `videoUrl`).
-  - Membros marcados `active: false` quando saem do grupo.
-  - Tópicos e tags pouco usados (mesclar ou remover).
-  - Traduções EN pendentes.
-
-## 10. Quando este documento não cobre algo
-
-Pergunte ao editor-chefe **antes** de publicar. Depois, atualize este documento.
+As sete publicações importadas inicialmente permanecem em rascunho. Complete os dados com as fontes originais, sem inventar nomes, vínculos, DOIs ou endereços.

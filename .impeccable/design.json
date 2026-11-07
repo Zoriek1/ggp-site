@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-06T16:15:22.535Z",
+  "title": "Design System: Portal GGP",
+  "extensions": {
+    "colorMeta": {
+      "brand-700": {
+        "role": "primary",
+        "displayName": "Azul da marca",
+        "tonalRamp": [
+          "oklch(25% 0.12 252)",
+          "oklch(40% 0.18 252)",
+          "oklch(55% 0.18 252)",
+          "oklch(92% 0.06 250)",
+          "oklch(96% 0.03 250)"
+        ]
+      },
+      "ink-900": {
+        "role": "neutral",
+        "displayName": "Neutros ink",
+        "tonalRamp": [
+          "oklch(18% 0.03 250)",
+          "oklch(35% 0.03 250)",
+          "oklch(55% 0.03 250)",
+          "oklch(78% 0.02 250)",
+          "oklch(89% 0.015 250)",
+          "oklch(95% 0.01 250)",
+          "oklch(98% 0.005 250)"
+        ]
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-rest",
+        "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "purpose": "Cartão público em repouso; shadow-sm extraído do Tailwind instalado."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "purpose": "Cartão público em hover; shadow-md."
+      },
+      {
+        "name": "mobile-nav",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Painel de navegação móvel; shadow-lg."
+      }
+    ],
+    "motion": [
+      {
+        "name": "card-transition",
+        "value": "200ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Transição do cartão existente."
+      },
+      {
+        "name": "card-image-transition",
+        "value": "300ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Ampliação da imagem para scale(1.03) no hover do cartão."
+      },
+      {
+        "name": "skip-link-transition",
+        "value": "transform 0.15s ease",
+        "purpose": "Entrada do skip-link ao receber foco."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "portal-sm",
+        "value": "40rem"
+      },
+      {
+        "name": "portal-md",
+        "value": "48rem"
+      },
+      {
+        "name": "portal-lg",
+        "value": "64rem"
+      },
+      {
+        "name": "admin-mobile-max",
+        "value": "760px"
+      },
+      {
+        "name": "editor-stack-max",
+        "value": "1100px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação preenchida compartilhada pelo painel e pelos filtros.",
+      "html": "<button class=\"ds-button-primary\">Publicar</button>",
+      "css": ".ds-button-primary {display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;padding:.65rem 1rem;border-radius:.375rem;font-size:.875rem;font-weight:600;text-decoration:none;font-family:var(--font-sans);cursor:pointer;background:var(--color-brand-button);color:#fff;border:1px solid transparent;}.ds-button-primary:hover {background:var(--color-brand-button-hover);text-decoration:none;}.ds-button-primary:disabled {cursor:wait;opacity:.55;}.ds-button-primary:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; border-radius: 2px; }"
+    },
+    {
+      "name": "Botão secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ação auxiliar com borda, como salvar rascunho e pré-visualizar.",
+      "html": "<button class=\"ds-button-secondary\">Salvar rascunho</button>",
+      "css": ".ds-button-secondary {display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;padding:.65rem 1rem;border-radius:.375rem;font-size:.875rem;font-weight:600;text-decoration:none;font-family:var(--font-sans);cursor:pointer;background:var(--color-surface);color:var(--color-ink-900);border:1px solid var(--color-ink-200);}.ds-button-secondary:hover {border-color:var(--color-brand-700);text-decoration:none;}.ds-button-secondary:disabled {cursor:wait;opacity:.55;}.ds-button-secondary:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; border-radius: 2px; }"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campo rotulado do painel e dos filtros públicos.",
+      "html": "<label class=\"ds-field\"><span>Título em português</span><input placeholder=\"Título\" /></label>",
+      "css": ".ds-field {display:flex;flex-direction:column;gap:.5rem;min-width:0;font-family:var(--font-sans);font-size:.875rem;}.ds-field span {font-weight:600;color:var(--color-ink-900);}.ds-field input {width:100%;min-height:2.75rem;border:1px solid var(--color-ink-300);border-radius:.375rem;background:var(--color-surface);color:var(--color-ink-900);padding:.65rem .75rem;font:inherit;caret-color:var(--color-brand-700);}.ds-field input::placeholder {color:var(--color-ink-500);opacity:1;}.ds-field input:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; border-radius: 2px; }"
+    },
+    {
+      "name": "Navegação do painel",
+      "kind": "nav",
+      "description": "Lista lateral, horizontal com rolagem em telas menores.",
+      "html": "<nav class=\"ds-admin-nav\" aria-label=\"Seções do painel\"><a href=\"#overview\">Visão geral</a><a href=\"#content\">Conteúdos</a><a href=\"#groups\">PGPs</a></nav>",
+      "css": ".ds-admin-nav {display:flex;flex-direction:column;gap:.4rem;padding:2rem 1.25rem;border-right:1px solid var(--color-ink-200);font-family:var(--font-sans);}.ds-admin-nav a {color:var(--color-ink-700);padding:.7rem .75rem;border-radius:.375rem;font-size:.875rem;text-decoration:none;}.ds-admin-nav a:first-child {font-weight:600;}.ds-admin-nav a:hover {background:var(--color-brand-50);color:var(--color-brand-700);}.ds-admin-nav a:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; border-radius: 2px; }@media(max-width:760px){.ds-admin-nav{min-height:0;flex-direction:row;overflow-x:auto;padding:.65rem;border-right:0;border-bottom:1px solid var(--color-ink-200);}.ds-admin-nav a{white-space:nowrap;}}"
+    },
+    {
+      "name": "Etiqueta de taxonomia",
+      "kind": "chip",
+      "refersTo": "tag",
+      "description": "Link para área, palavra-chave ou PGP relacionado.",
+      "html": "<a class=\"ds-tag\" href=\"#taxonomy\">Palavra-chave</a>",
+      "css": ".ds-tag {display:inline-block;border-radius:.375rem;background:var(--color-brand-50);padding:.5rem .75rem;color:var(--color-brand-700);font-family:var(--font-sans);font-size:.875rem;text-underline-offset:.2em;}.ds-tag:hover {text-decoration:underline;}.ds-tag:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; border-radius: 2px; }"
+    },
+    {
+      "name": "Cartão público",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Título, resumo e metadados de um registro do portal.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-content\"><div class=\"ds-card-kind\">Artigo</div><h3><a href=\"#reading\">Título da leitura</a></h3><p>Resumo do conteúdo compartilhado.</p><div class=\"ds-card-meta\">Autoria</div></div></article>",
+      "css": ".ds-card {display:flex;flex-direction:column;overflow:hidden;border-radius:.75rem;border:1px solid var(--color-ink-100);background:var(--color-surface);box-shadow:0 1px 3px 0 rgb(0 0 0 / .1),0 1px 2px -1px rgb(0 0 0 / .1);transition:all 200ms cubic-bezier(.4,0,.2,1);font-family:var(--font-sans);}.ds-card:hover {transform:translateY(-.125rem);border-color:color-mix(in oklab,var(--color-brand-500) 40%,transparent);box-shadow:0 4px 6px -1px rgb(0 0 0 / .1),0 2px 4px -2px rgb(0 0 0 / .1);}.ds-card-content {display:flex;flex:1;flex-direction:column;gap:.5rem;padding:1.25rem;}.ds-card-kind {font-size:.75rem;font-weight:500;text-transform:uppercase;letter-spacing:.025em;color:var(--color-brand-700);}.ds-card h3 {margin:0;font-family:var(--font-serif);font-size:1.125rem;line-height:1.375;letter-spacing:-.01em;}.ds-card h3 a {color:var(--color-ink-900);text-decoration:none;transition:color 150ms cubic-bezier(.4,0,.2,1);}.ds-card:hover h3 a {color:var(--color-brand-700);}.ds-card p {margin:0;font-size:.875rem;color:var(--color-ink-700);}.ds-card-meta {margin-top:auto;padding-top:.75rem;font-size:.75rem;color:var(--color-ink-500);}.ds-card a:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; border-radius: 2px; }@media(prefers-reduced-motion:reduce){.ds-card,.ds-card a{transition-duration:.01ms!important;}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Portal editorial do GGP",
+    "overview": "Nome descritivo do sistema observado, sem propor uma nova identidade. Títulos em serifada, texto e controles em sans-serif, azul institucional e superfícies frias sustentam a leitura do acervo. O painel estende a mesma linguagem com tabelas, campos e ações explícitas.\n\nO portal tem ritmo amplo e hierarquia editorial; o painel concentra a operação mantendo espaço entre grupos de campos. Esta documentação registra o código e as capturas existentes, sem redesenho ou nova direção de marca.",
+    "keyCharacteristics": [
+      "Source Serif 4 nos títulos; Inter no corpo e na operação.",
+      "Azul para links, seleção e ações; neutros semânticos para estrutura.",
+      "Tema escuro por substituição dos mesmos tokens.",
+      "Bordas discretas, cantos moderados e profundidade contida."
+    ],
+    "rules": [
+      {
+        "name": "The Semantic Surface Rule",
+        "body": "Use `surface`, `ink-*` e `brand-*` nas superfícies compartilhadas para preservar os dois temas. A faixa azul profunda do hero e suas ações branca/contornada são um tratamento específico da abertura do portal.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do estender os tokens semânticos e a dupla Source Serif 4/Inter existente.",
+      "Do manter a leitura pública e a operação do painel reconhecíveis como o mesmo produto.",
+      "Do preservar rótulos, foco visível, quebra de ações e leitura nos dois temas."
+    ],
+    "donts": [
+      "Don't substituir superfícies compartilhadas por branco fixo sem respeitar o tema.",
+      "Don't transformar o tratamento específico do hero em padrão de todos os painéis.",
+      "Don't promover textos, registros de teste ou indicadores de desenvolvimento das capturas a elementos da identidade."
+    ]
+  }
+}

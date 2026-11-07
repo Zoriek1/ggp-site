@@ -1,0 +1,1 @@
+GGP is a research collective bridging university and K-12 education, bringing together university professors, teacher-education students and school teachers through PGPs (Small Research Groups). Browse our publications, teaching materials and events.

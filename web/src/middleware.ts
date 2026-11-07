@@ -13,6 +13,8 @@ export function middleware(req: NextRequest) {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
+    /^\/admin(?:\/|$)/.test(pathname) ||
+    /^\/media(?:\/|$)/.test(pathname) ||
     pathname === "/sitemap.xml" ||
     pathname === "/robots.txt" ||
     METADATA_ROUTE.test(pathname) ||

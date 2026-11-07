@@ -1,0 +1,1 @@
+O GGP é um coletivo que conecta a universidade e a educação básica, articulando professores universitários, licenciandos e professores K-12 por meio de PGPs (Pequenos Grupos de Pesquisa). Aqui você encontra publicações, materiais didáticos e eventos do grupo.

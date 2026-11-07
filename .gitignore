@@ -1,0 +1,10 @@
+work/
+output/
+.env
+.env.*
+!.env.example
+node_modules/
+coverage/
+test-results/
+playwright-report/
+.runtime/

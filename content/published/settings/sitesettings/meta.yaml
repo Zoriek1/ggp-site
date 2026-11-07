@@ -1,0 +1,32 @@
+id: sitesettings
+collection: settings
+title:
+  pt: Grande Grupo de Pesquisa
+  en: Large Research Group
+slug:
+  pt: grande-grupo-de-pesquisa
+  en: ""
+summary:
+  pt: Pesquisa e educação em ensino de física na UFG
+  en: Research and education in physics teaching at UFG
+kind: text
+authors: []
+pgpIds: []
+areaIds: []
+keywordIds: []
+selectedIds: []
+institution: ""
+venue: ""
+doi: ""
+externalUrl: ""
+attachments: []
+featured: false
+archived: false
+pageKind: free
+contactEmail: ""
+links:
+  - label: instagram
+    url: https://instagram.com/ggp.fisica
+  - label: youtube
+    url: https://youtube.com/channel/UCc_-y8bfvMSaXjyd4O69-DQ
+updatedAt: 2026-06-01T04:02:33.000Z

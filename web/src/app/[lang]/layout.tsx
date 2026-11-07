@@ -23,4 +23,4 @@ export default async function LangLayout({
   );
 }
 
-export const generateStaticParams = () => [{ lang: "pt" }, { lang: "en" }];
+export const dynamic = "force-dynamic";

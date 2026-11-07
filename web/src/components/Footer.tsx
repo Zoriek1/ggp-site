@@ -1,45 +1,39 @@
 import Link from "next/link";
-import type { Lang } from "@/i18n/config";
-import { getDictionary, tField } from "@/i18n/dictionaries";
-import { localizedHref } from "@/i18n/routes";
 import { Container } from "./Container";
-import { sanityFetch } from "@/lib/sanity/client";
-import { siteSettingsQuery } from "@/lib/sanity/queries";
-import type { SiteSettings } from "@/lib/sanity/types";
+import { localizedHref } from "@/i18n/routes";
+import { field, type Lang } from "@/lib/content/model";
+import { getPublicContent } from "@/lib/server/store";
 
 export async function Footer({ lang }: { lang: Lang }) {
-  const dict = getDictionary(lang);
-  const settings = await sanityFetch<SiteSettings | null>(siteSettingsQuery, {}, {
-    tags: ["siteSettings"],
-  });
-
-  const siteName = tField(settings?.siteName, lang) || "GGP";
-  const email = settings?.contactEmail;
-  const ig = settings?.social?.instagram;
-
+  const settings = (await getPublicContent()).find(
+    (r) => r.collection === "settings",
+  );
   return (
-    <footer className="mt-16 border-t border-ink-100 bg-surface">
-      <Container className="py-10 text-sm text-ink-500 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <p>
-          © {new Date().getFullYear()} {siteName}. {dict.footer.rights}
-        </p>
-        <nav className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          <Link href={localizedHref("about", lang)} className="hover:text-ink-900">
-            {dict.footer.about}
+    <footer className="mt-20 border-t border-ink-200">
+      <Container className="flex flex-wrap items-start justify-between gap-6 py-10 text-sm">
+        <div>
+          <p className="font-serif text-lg">
+            {settings ? field(settings.title, lang) : "GGP"}
+          </p>
+          <p className="mt-2 text-ink-700">
+            © {new Date().getFullYear()} · Universidade Federal de Goiás
+          </p>
+        </div>
+        <nav className="flex flex-wrap gap-5">
+          <Link href={localizedHref("about", lang)}>
+            {lang === "pt" ? "Sobre" : "About"}
           </Link>
-          <Link href={localizedHref("contact", lang)} className="hover:text-ink-900">
-            {dict.footer.contact}
+          <Link href={localizedHref("contact", lang)}>
+            {lang === "pt" ? "Contato" : "Contact"}
           </Link>
-          {email && (
-            <a href={`mailto:${email}`} className="hover:text-ink-900">
-              {email}
+          <Link href="/admin">
+            {lang === "pt" ? "Painel de publicação" : "Publishing dashboard"}
+          </Link>
+          {settings?.links.map((link) => (
+            <a key={link.url} href={link.url} rel="noreferrer">
+              {link.label}
             </a>
-          )}
-          {ig && (
-            <a href={ig} target="_blank" rel="noreferrer" className="hover:text-ink-900">
-              Instagram
-            </a>
-          )}
+          ))}
         </nav>
       </Container>
     </footer>

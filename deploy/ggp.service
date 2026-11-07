@@ -1,0 +1,22 @@
+[Unit]
+Description=Portal GGP
+After=network.target
+
+[Service]
+Type=simple
+User=ggp
+Group=ggp
+WorkingDirectory=/srv/ggp/current/web
+Environment=NODE_ENV=production
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3000
+EnvironmentFile=/etc/ggp/portal.env
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

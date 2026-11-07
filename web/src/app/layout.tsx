@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import { HREFLANG, isLang, DEFAULT_LOCALE } from "@/i18n/config";
 import "./globals.css";
+import { env } from "@/lib/env";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,13 +19,13 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(env.siteUrl),
   title: {
     default: "GGP — Ensino de Física · UFG",
     template: "%s · GGP",
   },
   description:
-    "Repositório acadêmico do GGP: publicações, teses, materiais didáticos, mídia e eventos em Ensino de Física na Universidade Federal de Goiás.",
+    "Portal do GGP e seus PGPs: acervo, blog, comunicados e guias de estudo.",
   openGraph: {
     type: "website",
     siteName: "GGP",
