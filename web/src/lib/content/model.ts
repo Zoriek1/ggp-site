@@ -24,7 +24,10 @@ export const localizedSchema = z.object({
 });
 const localizedTitle = localizedSchema.refine(
   (v) => v.pt.trim().length > 0 && v.pt.length <= 240,
-  "Informe um título em português (até 240 caracteres).",
+  {
+    message: "Informe um título em português (até 240 caracteres).",
+    path: ["pt"],
+  },
 );
 const url = z
   .string()
@@ -50,6 +53,12 @@ export const recordSchema = z.object({
     pt: idSchema,
     en: z.union([idSchema, z.literal("")]).default(""),
   }),
+  previousSlugs: z
+    .object({
+      pt: z.array(idSchema).max(1000).default([]),
+      en: z.array(idSchema).max(1000).default([]),
+    })
+    .default({ pt: [], en: [] }),
   summary: localizedSchema.default({ pt: "", en: "" }),
   body: localizedSchema.default({ pt: "", en: "" }),
   kind: z.enum(kinds).default("text"),
@@ -87,6 +96,7 @@ export type VersionedRecord = {
   published: boolean;
   hasDraft: boolean;
   draftRevision?: string | null;
+  publishedRecord?: ContentRecord;
 };
 export type Snapshot = {
   head: string;
@@ -133,56 +143,112 @@ export function keyOf(
 export function publicRecords(snapshot: Snapshot): ContentRecord[] {
   return snapshot.published.filter((r) => !r.archived);
 }
-export function publishErrors(
+export function recordSlugs(record: ContentRecord): string[] {
+  return [
+    ...new Set(
+      [
+        record.slug.pt,
+        record.slug.en,
+        ...record.previousSlugs.pt,
+        ...record.previousSlugs.en,
+      ].filter(Boolean),
+    ),
+  ];
+}
+export type FieldIssue = { path: string; message: string };
+export function publicationIssues(
   record: ContentRecord,
   published: ContentRecord[],
-): string[] {
-  const errors: string[] = [];
-  const references: [string[], Collection, string][] = [
-    [record.pgpIds, "pgps", "PGP"],
-    [record.areaIds, "areas", "área"],
-    [record.keywordIds, "keywords", "palavra-chave"],
-    [record.selectedIds, "items", "leitura"],
-  ];
-  for (const [ids, collection, label] of references)
+): FieldIssue[] {
+  const issues: FieldIssue[] = [];
+  for (const [ids, collection, path, label] of [
+    [record.pgpIds, "pgps", "pgpIds", "PGP"],
+    [record.areaIds, "areas", "areaIds", "área"],
+    [record.keywordIds, "keywords", "keywordIds", "palavra-chave"],
+    [record.selectedIds, "items", "selectedIds", "leitura"],
+  ] as const)
     for (const id of ids) {
       if (!published.some((r) => r.collection === collection && r.id === id))
-        errors.push(`${label} não publicado: ${id}`);
+        issues.push({ path, message: `${label} não publicado: ${id}` });
     }
   if (record.collection === "items") {
     if (record.kind === "article" && !record.pgpIds.length)
-      errors.push("Artigos precisam estar associados a pelo menos um PGP.");
-    if (!record.authors.length) errors.push("Informe pelo menos um autor.");
+      issues.push({
+        path: "pgpIds",
+        message: "Associe o artigo a pelo menos um PGP.",
+      });
+    if (!record.authors.length)
+      issues.push({ path: "authors", message: "Informe pelo menos um autor." });
     if (!["post", "notice"].includes(record.kind) && !record.areaIds.length)
-      errors.push("Selecione pelo menos uma área do conhecimento.");
+      issues.push({
+        path: "areaIds",
+        message: "Selecione pelo menos uma área do conhecimento.",
+      });
     if (
       !record.body.pt.trim() &&
       !record.externalUrl &&
       !record.attachments.length
     )
-      errors.push("Escreva o texto ou informe um arquivo/link para leitura.");
+      issues.push({
+        path: "body.pt",
+        message: "Escreva o texto ou adicione um arquivo/link para leitura.",
+      });
   }
-  if (record.attachments.some((a) => a.type === "image" && !a.alt.trim()))
-    errors.push("Imagens precisam de texto alternativo.");
-  if (Object.values(record.body).some((body) => /!\[\s*\]\(/.test(body)))
-    errors.push("Descreva as imagens no texto alternativo.");
+  record.attachments.forEach((attachment, index) => {
+    if (attachment.type === "image" && !attachment.alt.trim())
+      issues.push({
+        path: `attachments.${index}.alt`,
+        message: "Descreva a imagem no texto alternativo.",
+      });
+  });
+  for (const lang of ["pt", "en"] as const)
+    if (/!\[\s*\]\(/.test(record.body[lang]))
+      issues.push({
+        path: `body.${lang}`,
+        message: "Descreva as imagens no texto alternativo.",
+      });
+  const reserved = new Set(recordSlugs(record));
   for (const other of published)
     if (
       keyOf(other) !== keyOf(record) &&
       other.collection === record.collection
     ) {
       if (record.collection === "settings")
-        errors.push("O portal já possui um registro de configurações.");
+        issues.push({
+          path: "title.pt",
+          message: "O portal já possui um registro de configurações.",
+        });
       if (
         record.collection === "pages" &&
         record.pageKind !== "free" &&
         other.pageKind === record.pageKind &&
         !other.archived
       )
-        errors.push("Já existe uma página publicada deste tipo.");
-      for (const lang of ["pt", "en"] as const)
-        if (field(other.slug, lang) === field(record.slug, lang))
-          errors.push(`Endereço já usado: ${field(record.slug, lang)}`);
+        issues.push({
+          path: "pageKind",
+          message: "Já existe uma página publicada deste tipo.",
+        });
+      for (const slug of recordSlugs(other))
+        if (reserved.has(slug))
+          issues.push({
+            path: record.slug.en === slug ? "slug.en" : "slug.pt",
+            message: `Endereço já usado ou reservado por outra publicação: ${slug}`,
+          });
     }
-  return [...new Set(errors)];
+  return issues.filter(
+    (issue, index, list) =>
+      list.findIndex(
+        (other) => other.path === issue.path && other.message === issue.message,
+      ) === index,
+  );
+}
+export function publishErrors(
+  record: ContentRecord,
+  published: ContentRecord[],
+): string[] {
+  return [
+    ...new Set(
+      publicationIssues(record, published).map((issue) => issue.message),
+    ),
+  ];
 }

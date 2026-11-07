@@ -1,11 +1,9 @@
 "use client";
 import { useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
 
 export function Login() {
   const [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
-  const router = useRouter();
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setBusy(true);
@@ -22,8 +20,8 @@ export function Login() {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error);
-      router.replace("/admin");
-      router.refresh();
+      // Start a fresh authenticated document after the session cookie is set.
+      window.location.replace("/admin");
     } catch (error) {
       setError(
         error instanceof Error

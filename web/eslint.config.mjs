@@ -22,6 +22,7 @@ export default [
     files: [
       "src/components/MarkdownBody.tsx",
       "src/features/portal/Portal.tsx",
+      "src/features/portal/ContentView.tsx",
     ],
     rules: { "@next/next/no-img-element": "off" },
   },

@@ -4,6 +4,7 @@ import {
   recordSchema,
   keyOf,
   publishErrors,
+  recordSlugs,
   type ContentRecord,
   type Snapshot,
 } from "./model";
@@ -89,9 +90,10 @@ export function parseSnapshot(
   }
   const slugs = new Set<string>();
   for (const record of snapshot.published)
-    for (const lang of ["pt", "en"] as const) {
-      const slug = `${record.collection}/${lang}/${record.slug[lang] || record.slug.pt}`;
-      if (slugs.has(slug)) throw new Error(`Endereço duplicado: ${slug}`);
+    for (const value of recordSlugs(record)) {
+      const slug = `${record.collection}/${value}`;
+      if (slugs.has(slug))
+        throw new Error(`Endereço duplicado ou reservado: ${slug}`);
       slugs.add(slug);
     }
   return snapshot;

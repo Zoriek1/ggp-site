@@ -3,13 +3,22 @@ import { readdir, readFile, mkdir, writeFile, unlink } from "node:fs/promises";
 import path from "node:path";
 import { contentPath } from "../content/codec";
 
+const portalErrorBrand = Symbol.for("ggp.PortalError");
 export class PortalError extends Error {
+  readonly [portalErrorBrand] = true;
   constructor(
     message: string,
     public status = 400,
+    public issues?: { path: string; message: string }[],
   ) {
     super(message);
   }
+}
+// The shared store can originate in a different Next.js server bundle.
+export function isPortalError(error: unknown): error is PortalError {
+  return (
+    error instanceof Error && (error as PortalError)[portalErrorBrand] === true
+  );
 }
 export type RepositoryState = { head: string; files: Record<string, string> };
 export type Changes = Record<string, string | null>;

@@ -10,6 +10,10 @@ Abra os arquivos abaixo para visualizar as imagens completas:
 | Login | [Abrir](screenshots/login-desktop.png) | [Abrir](screenshots/login-mobile.png) | — |
 | Painel | [Abrir](screenshots/admin-desktop.png) | [Abrir](screenshots/admin-mobile.png) | — |
 | Editor | [Abrir](screenshots/editor-desktop.png) | [Abrir](screenshots/editor-mobile.png) | [Abrir](screenshots/editor-dark.png) |
+| Recuperação de escrita | [Abrir](screenshots/recovery-desktop.png) | [Abrir](screenshots/recovery-mobile.png) | — |
+| Edição concorrente | [Abrir](screenshots/conflict-desktop.png) | [Abrir](screenshots/conflict-mobile.png) | — |
+| Prévia de guia | [Abrir](screenshots/guide-preview-desktop.png) | [Abrir](screenshots/guide-preview-mobile.png) | — |
+| Validação de comunicado | [Abrir](screenshots/notice-validation-desktop.png) | [Abrir](screenshots/notice-validation-mobile.png) | — |
 
 ## Portal
 
@@ -22,3 +26,11 @@ Abra os arquivos abaixo para visualizar as imagens completas:
 ## Editor
 
 ![Editor de conteúdo](screenshots/editor-desktop.png)
+
+## Recuperação da escrita
+
+![Recuperar cópia local no celular](screenshots/recovery-mobile.png)
+
+## Prévia completa de um guia
+
+![Prévia de guia com leituras manuais e por palavra-chave](screenshots/guide-preview-desktop.png)

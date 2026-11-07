@@ -44,3 +44,19 @@ Arquivos removidos de um texto continuam no armazenamento para preservar links e
 **Textos em rascunho e histórico são públicos no repositório Git. Os uploads também possuem URL pública.** Não use este portal para documentos confidenciais. As contas controlam a edição, não a confidencialidade dos arquivos.
 
 As sete publicações importadas inicialmente permanecem em rascunho. Complete os dados com as fontes originais, sem inventar nomes, vínculos, DOIs ou endereços.
+
+## Recuperação da escrita e conflitos
+
+Enquanto você escreve, o painel mantém uma cópia local neste navegador. Ela não substitui **Salvar rascunho** e não publica nada. Ao reabrir o editor, escolha recuperar ou descartar a cópia encontrada. Contas, registros e abas têm cópias independentes; se o navegador bloquear o armazenamento, o painel informa a indisponibilidade.
+
+Links internos avisam quando há alterações pendentes. Recarregar, fechar a aba ou voltar para outra página pode exigir recuperar a cópia ao retornar. Depois de recuperar, salve no acervo. O painel preserva também o texto digitado enquanto uma gravação está em andamento: a confirmação vale para a versão enviada, e as alterações posteriores permanecem pendentes.
+
+Quando outra pessoa altera o mesmo registro, o painel mostra a comparação. Você pode manter seu texto sobre a revisão atual e salvar novamente, ou descartar explicitamente suas alterações e carregar a versão do acervo. Antes de descartar, use **Baixar cópia** se precisar preservar uma alternativa. Não há mesclagem automática dos textos.
+
+## Prévia e endereços
+
+**Pré-visualizar** usa a mesma apresentação da página pública, incluindo imagens, arquivos, associações e leituras de guias. As leituras automáticas e manuais são calculadas sobre o acervo publicado. Links da prévia abrem em outra aba. **Ver publicação** abre sempre a versão pública, mesmo que o rascunho tenha outro endereço.
+
+Ao publicar uma alteração de endereço, os endereços anteriores ficam no histórico do registro e redirecionam para o atual. Salvar apenas o rascunho não altera o endereço público. Endereços de outras publicações, incluindo seu histórico e traduções, não podem ser reutilizados.
+
+O formulário adapta os campos ao tipo de conteúdo. Dados acadêmicos aparecem em uma seção opcional; erros de preenchimento aparecem também próximos aos campos correspondentes.

@@ -41,3 +41,15 @@ O editor visual é carregado apenas no painel. O frontend público interpreta Ma
 Imagens são verificadas e reprocessadas com Sharp. PDFs precisam de assinatura e marcador de término. O tamanho máximo é 20 MB. Arquivos recebem nome por hash do conteúdo e são servidos em `/media/<hash>.<ext>`, com `nosniff` e cache imutável. Mídias ficam em volume persistente fora da implantação e não entram no Git.
 
 Use uma instância Node para esta configuração inicial. Ao adicionar outras instâncias, compartilhe o volume de mídia e reveja a limitação de tentativas distribuída. Mesmo entre instâncias, a proteção de conflito no Git continua obrigatória.
+
+## Consolidação do editor
+
+O estado do formulário e a confirmação de gravação são separados. Ao receber uma resposta, o editor adota a nova revisão e os metadados do servidor, preservando campos alterados depois do envio. `VersionedRecord.publishedRecord` fornece a versão pública para **Ver publicação** sem depender do slug do rascunho. O payload de erros inclui `issues: [{ path, message }]` para feedback junto aos campos.
+
+Cópias locais usam um envelope versionado, com revisão de base, timestamp e estado parcial do formulário. A chave inclui conta, registro/novo-registro e aba. O schema da cópia local admite campos incompletos; a validação editorial continua obrigatória ao gravar no servidor. Não há gravação automática de rascunhos no Git. Cópias não substituem o backup do acervo. Conflitos conservam o texto local e exigem uma escolha explícita antes de atualizar a revisão de base.
+
+A apresentação da página é compartilhada entre o portal e a prévia do painel, sem consultas privadas dentro do componente de leitura. Guias em prévia usam os mesmos critérios de seleção e deduplicação do portal.
+
+`previousSlugs` tem listas PT/EN opcionais nos arquivos antigos (normalizadas para listas vazias). Na publicação, o servidor preserva o histórico conhecido e acrescenta os slugs substituídos, inclusive quando o inglês usava fallback para português. A busca por endereço reconhece atuais e anteriores e redireciona diretamente para o atual, sem cadeia de redirecionamentos. A validação reserva os endereços entre os idiomas e históricos de registros publicados da mesma coleção. Nenhuma reescrita em massa dos arquivos antigos é necessária.
+
+O middleware propaga o caminho para o layout raiz resolver o endereço canônico antes de enviar HTML, mantendo o status HTTP 308 mesmo com streaming do Next.js. Erros esperados do domínio usam uma marca compartilhada entre bundles do servidor para preservar 409/422/503 ao atravessar o store global e as rotas de API.

@@ -5,7 +5,8 @@ import {
   collections,
   keyOf,
   recordSchema,
-  publishErrors,
+  publicationIssues,
+  field,
   type Collection,
   type ContentRecord,
   type Snapshot,
@@ -118,6 +119,8 @@ export class ContentStore {
         hasDraft: !!draft,
         revision,
         draftRevision,
+        publishedRecord:
+          published && !published.archived ? published : undefined,
       };
     });
   }
@@ -135,7 +138,7 @@ export class ContentStore {
       );
       if ((existing?.revision ?? null) !== input.revision)
         throw new PortalError(
-          "Outra pessoa alterou este registro. Copie seu texto e recarregue para comparar.",
+          "Outra pessoa alterou este registro. Compare as versões antes de salvar novamente.",
           409,
         );
       const original = snapshot.published.find(
@@ -148,14 +151,33 @@ export class ContentStore {
             changes[file] = null;
       };
       record.updatedAt = new Date().toISOString();
+      // URL history is server-owned: a draft or forged request cannot erase it.
+      record.previousSlugs = structuredClone(
+        original?.previousSlugs ||
+          existing?.record.previousSlugs || { pt: [], en: [] },
+      );
       if (input.action === "draft")
         Object.assign(changes, serializeRecord(record, "drafts"));
       if (input.action === "publish") {
         record.archived = false;
         record.publishedAt =
           original?.publishedAt || record.publishedAt || record.updatedAt;
-        const errors = publishErrors(record, snapshot.published);
-        if (errors.length) throw new PortalError(errors.join(" "), 422);
+        if (original)
+          for (const lang of ["pt", "en"] as const) {
+            const previous = field(original.slug, lang);
+            if (
+              previous !== field(record.slug, lang) &&
+              !record.previousSlugs[lang].includes(previous)
+            )
+              record.previousSlugs[lang].push(previous);
+          }
+        const issues = publicationIssues(record, snapshot.published);
+        if (issues.length)
+          throw new PortalError(
+            issues.map((issue) => issue.message).join(" "),
+            422,
+            issues,
+          );
         Object.assign(changes, serializeRecord(record, "published"));
         remove("drafts");
       }

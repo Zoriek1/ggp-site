@@ -5,7 +5,8 @@ const PUBLIC_FILE = /\.(.*)$/;
 
 // Rotas de metadata geradas pelo Next (sem extensão) que NÃO devem receber
 // prefixo de idioma — senão o crawler recebe um 307 em vez da imagem.
-const METADATA_ROUTE = /^\/(opengraph-image|twitter-image|apple-icon|icon|manifest\.webmanifest)$/;
+const METADATA_ROUTE =
+  /^\/(opengraph-image|twitter-image|apple-icon|icon|manifest\.webmanifest)$/;
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -29,6 +30,7 @@ export function middleware(req: NextRequest) {
     // raiz (Server Component) o leia via headers() e defina <html lang>.
     const requestHeaders = new Headers(req.headers);
     requestHeaders.set("x-lang", first);
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({ request: { headers: requestHeaders } });
   }
 

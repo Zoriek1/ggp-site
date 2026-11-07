@@ -13,7 +13,7 @@ export default async function Page({
   const { collection } = await searchParams;
   return (
     <AdminShell username={user.username}>
-      <Workspace
+      <Workspace userId={user.id}
         key={collection || "all"}
         collection={
           collection && validCollection(collection) ? collection : undefined

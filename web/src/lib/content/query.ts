@@ -1,4 +1,4 @@
-import { field, type ContentRecord, type Lang } from "./model";
+import { field, recordSlugs, type ContentRecord, type Lang } from "./model";
 
 export const normalize = (text: string) =>
   text
@@ -84,7 +84,7 @@ export function bySlug(
     (r) =>
       r.collection === collection &&
       !r.archived &&
-      [r.slug.pt, r.slug.en].includes(slug),
+      recordSlugs(r).includes(slug),
   );
 }
 export function recordSection(

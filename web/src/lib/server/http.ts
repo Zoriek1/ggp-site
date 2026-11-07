@@ -1,20 +1,24 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
-import { PortalError } from "./repository";
+import { PortalError, isPortalError } from "./repository";
 
 export function failure(error: unknown): NextResponse {
   if (error instanceof ZodError)
     return NextResponse.json(
       {
+        issues: error.issues.map((issue) => ({
+          path: issue.path.join("."),
+          message: issue.message,
+        })),
         error: error.issues
           .map((i) => `${i.path.join(".")}: ${i.message}`)
           .join(" "),
       },
       { status: 422 },
     );
-  if (error instanceof PortalError)
+  if (isPortalError(error))
     return NextResponse.json(
-      { error: error.message },
+      { error: error.message, issues: error.issues },
       { status: error.status },
     );
   console.error("[portal] falha interna", {

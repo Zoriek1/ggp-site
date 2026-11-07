@@ -14,7 +14,7 @@ export default async function Page({
   if (!validCollection(collection)) notFound();
   return (
     <AdminShell username={user.username}>
-      <Workspace collection={collection} editing={id} />
+      <Workspace userId={user.id} collection={collection} editing={id} />
     </AdminShell>
   );
 }

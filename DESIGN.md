@@ -173,6 +173,12 @@ Campos usam superfície semântica, borda `ink-300`, rótulo visível e altura m
 
 Marca textual `GGP.` em serifada acompanha portal e painel. O portal oferece navegação, busca, idioma e tema; o painel oferece seções, retorno ao portal e saída. Abas Português/English do editor usam linha azul e peso semibold na seleção. O menu público móvel fecha ao navegar, com Escape ou clique externo.
 
+### Recuperação e validação editorial
+
+Recuperação de escrita aparece dentro da página, antes do formulário, com identificação da cópia e ações explícitas para recuperar ou descartar. Conflitos mostram texto local e versão do acervo em duas colunas no desktop e uma no celular. A escolha de manter o texto exige salvar novamente; carregar a versão remota é uma ação explícita.
+
+Erros têm resumo navegável e mensagem junto ao campo, com `aria-invalid`, descrição associada e foco no campo a corrigir. O estado da cópia local é separado da confirmação de gravação. Dados acadêmicos opcionais ficam recolhidos e a prévia reutiliza a apresentação pública, em uma área identificada dentro do painel.
+
 ## Do's and Don'ts
 
 ### Do:
