@@ -117,7 +117,7 @@ O portal tem ritmo amplo e hierarquia editorial; o painel concentra a operação
 
 ### Neutral
 
-`ink-50` é o fundo geral; `surface` aparece em cabeçalhos, cartões, campos e painéis. `ink-900` identifica texto principal; `ink-700` texto de apoio; `ink-500` metadados; `ink-100` a `ink-300` compõem fundos suaves e divisórias.
+`accent-500` (laranja, `oklch(72% 0.18 50)`) aparece apenas como traço decorativo em títulos e no aviso de tradução. `ink-50` é o fundo geral; `surface` aparece em cabeçalhos, cartões, campos e painéis. `ink-900` identifica texto principal; `ink-700` texto de apoio; `ink-500` metadados; `ink-100` a `ink-300` compõem fundos suaves e divisórias.
 
 Os nomes com sufixo `-dark` no frontmatter documentam as substituições existentes das variáveis de mesmo nome; não são novos tokens no CSS. O tema acompanha `prefers-color-scheme` até haver escolha explícita salva. Erros e confirmações usam os estilos semânticos vermelho/verde já presentes no CSS, sem substituir a marca.
 

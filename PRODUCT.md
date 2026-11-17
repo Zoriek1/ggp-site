@@ -25,7 +25,7 @@ Perfis públicos de membros, tipos especializados de teses/eventos/mídia e inte
 
 Autores são nomes em `string[]`, com ordem editorial, independentes das contas de acesso. Um artigo pode estar associado a vários PGPs por IDs sem duplicar seu registro. IDs permanecem estáveis quando títulos ou endereços mudam.
 
-Artigos exigem ao menos um PGP; itens do acervo exigem autoria e área do conhecimento. Conteúdos gerais do GGP podem ser textos, posts ou comunicados sem PGP. Referências devem apontar para registros válidos antes de publicar.
+Itens do acervo exigem autoria e texto, arquivo ou link; artigos exigem ao menos um PGP; itens que não sejam posts nem comunicados exigem área do conhecimento. Conteúdos gerais do GGP podem ser textos, posts ou comunicados sem PGP. Referências devem apontar para registros válidos antes de publicar.
 
 O painel começa com uma conta compartilhada própria, sem cargos ou aprovação por função. Contas adicionais configuradas no servidor têm as mesmas permissões. A conta registra quem executou a operação, sem definir a autoria do texto; uma conta compartilhada não identifica individualmente seus usuários.
 

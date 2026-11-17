@@ -2,9 +2,9 @@
 
 ## Acesso e autoria
 
-O painel começa com uma conta compartilhada por professores e alunos. Todas as contas têm as mesmas permissões: criar, editar, salvar rascunhos, publicar, retirar publicações e arquivar. Não há aprovação por cargo. Contas adicionais podem ser configuradas pelo responsável pelo servidor, sem perfis públicos de membros.
+O painel começa com uma conta compartilhada por professores e alunos. Todas as contas têm as mesmas permissões: criar, editar, salvar rascunhos, publicar, retirar publicações e arquivar. Não há aprovação por cargo. Contas adicionais são configuradas pelo responsável pelo servidor, sem perfis públicos de membros. A sessão expira em 8 horas.
 
-O usuário conectado não determina os autores. Preencha os nomes no campo **Autores — um por linha**, na ordem correta. O commit registra a conta que fez a operação; com uma conta compartilhada, não é possível distinguir seus usuários pelo histórico.
+O usuário conectado não determina os autores. Preencha os nomes no campo **Autores — um por linha**, na ordem correta. O commit registra a ação e a conta que fez a operação; com uma conta compartilhada, não é possível distinguir seus usuários pelo histórico.
 
 ## O que publicar
 
@@ -14,11 +14,11 @@ O usuário conectado não determina os autores. Preencha os nomes no campo **Aut
 - **Guias:** introdução e agregação temática de leituras.
 - **Páginas:** sobre, contato e páginas livres.
 
-Artigos exigem pelo menos um PGP. Itens do acervo exigem área do conhecimento e autoria. Conteúdos gerais do GGP podem ser publicados como textos, posts ou comunicados sem PGP associado.
+Todo item do acervo exige autoria e texto, arquivo ou link para leitura. Artigos exigem pelo menos um PGP. Itens que não sejam posts nem comunicados exigem também área do conhecimento. Imagens exigem texto alternativo. Conteúdos gerais do GGP podem ser publicados como textos, posts ou comunicados sem PGP associado.
 
 ## Fluxo
 
-1. Se necessário, publique primeiro as áreas, palavras-chave e PGPs que serão selecionados.
+1. Se necessário, publique primeiro as áreas, palavras-chave, PGPs e leituras que serão selecionados: só é possível publicar vínculos com registros já publicados.
 2. Crie o conteúdo, informe autores e associe os registros pertinentes.
 3. Escreva em português; a versão inglesa é opcional. O portal usa português quando falta tradução.
 4. Envie arquivos, descreva as imagens e confira a prévia.
@@ -27,7 +27,7 @@ Artigos exigem pelo menos um PGP. Itens do acervo exigem área do conhecimento e
 
 Se ocorrer conflito ou falha de rede, o texto permanece no editor. Baixe uma cópia antes de recarregar e compare com a versão mais recente. Publicação recusada não aparece como concluída.
 
-**Retirar de publicação** preserva o texto como rascunho. Registros com dependências publicadas precisam ter seus vínculos removidos primeiro. **Arquivar** oculta o registro das listagens e preserva sua identidade; pode ser republicado pelo painel. Evite arquivar áreas e grupos ainda usados sem revisar os efeitos na navegação.
+**Retirar de publicação** preserva o texto como rascunho. Registros referenciados por conteúdos publicados (PGP, área, palavra-chave ou leitura de guia) precisam ter esses vínculos removidos primeiro. **Arquivar** oculta o registro das listagens e preserva sua identidade; pode ser republicado pelo painel. O arquivamento não verifica dependências. Evite arquivar áreas, palavras-chave e PGPs ainda usados sem revisar os efeitos na navegação.
 
 ## Guias e palavras-chave
 

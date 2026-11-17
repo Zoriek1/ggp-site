@@ -4,11 +4,12 @@ Portal de pesquisa, publicação e estudo do GGP/UFG. O site e o painel usam Nex
 
 ## Estrutura
 
-- `web/`: portal PT/EN, painel `/admin`, APIs autenticadas, importadores e testes.
-- `content/published/`: versões publicadas, organizadas por entidade e ID.
-- `content/drafts/`: rascunhos independentes da versão pública.
-- `legacy/`: Studio e módulos da implementação anterior, fora da aplicação ativa.
-- `docs/`: operação, publicação e implantação.
+- `web/`: portal PT/EN, painel `/admin`, APIs autenticadas, scripts e testes ([web/README.md](web/README.md)).
+- `content/published/`: versões publicadas, por coleção e ID. `content/drafts/`: rascunhos independentes da versão pública ([content/README.md](content/README.md)).
+- `deploy/`: units systemd e configuração do nginx ([deploy/README.md](deploy/README.md)).
+- `legacy/`: Studio e módulos da implementação anterior, fora da aplicação ativa; `legacy/studio/scripts/seed/` ainda alimenta `seed:content` ([legacy/README.md](legacy/README.md)).
+- `docs/`: arquitetura, política editorial, implantação e capturas.
+- `PRODUCT.md` e `DESIGN.md`: referência de produto e sistema visual.
 
 Um registro contém `meta.yaml`, `pt.md` e `en.md`. Autores são uma lista ordenada de nomes. PGPs, áreas e palavras-chave são referências por ID; um artigo pode aparecer em vários grupos sem duplicação. Guias combinam leituras manuais com conteúdos de qualquer PGP que correspondam a pelo menos uma palavra-chave selecionada.
 
@@ -27,7 +28,7 @@ npm run dev
 
 Portal: `http://localhost:3000/pt`. Painel: `http://localhost:3000/admin`.
 
-Os registros iniciais já estão no repositório: 22 PGPs, taxonomias, página sobre, configuração e sete artigos em rascunho. Os artigos precisam de revisão de autoria, vínculo com PGP e texto/link/arquivo antes de publicar. `npm run seed:content` repõe arquivos iniciais ausentes sem sobrescrever os existentes.
+Os registros iniciais já estão no repositório: 22 PGPs, 4 áreas, 11 palavras-chave, página sobre, configuração e 7 artigos em rascunho. Os artigos precisam de revisão de autoria, vínculo com PGP e texto/link/arquivo antes de publicar. `npm run seed:content` repõe arquivos iniciais ausentes sem sobrescrever os existentes.
 
 ## Verificação
 
@@ -48,7 +49,13 @@ Use `CONTENT_DRIVER=github`, credencial granular com permissão de conteúdo lim
 
 **Este repositório é público: os rascunhos e suas versões anteriores também são públicos no Git.** A conta do painel restringe a edição; rascunho significa não listado no portal, não conteúdo confidencial. Arquivos enviados possuem URL pública.
 
-Veja [implantação e recuperação](docs/DEPLOY.md), [política editorial](docs/EDITORIAL.md) e [arquitetura](docs/ARCHITECTURE.md).
+## Documentação
+
+- [Arquitetura](docs/ARCHITECTURE.md): domínio, rotas, SEO, drivers, autenticação e mídia.
+- [Política editorial](docs/EDITORIAL.md): publicação, vínculos e recuperação.
+- [Implantação e recuperação](docs/DEPLOY.md) e [deploy/](deploy/README.md).
+- [Conteúdo](content/README.md), [web](web/README.md) e [legado](legacy/README.md).
+- [Produto](PRODUCT.md) e [design](DESIGN.md).
 
 ## Capturas das telas
 

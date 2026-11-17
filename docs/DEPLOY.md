@@ -29,9 +29,9 @@ Não use os marcadores acima como credenciais. O painel sem configuração recus
 
 ## Desenvolvimento local
 
-Em `web/.env.local`, use `CONTENT_DRIVER=local`, `CONTENT_ALLOW_LOCAL_WRITES=true` e os valores de acesso gerados. Execute `npm run dev`. O portal abre em `/pt` ou `/en`; o painel em `/admin`.
+Em `web/.env.local`, use `CONTENT_DRIVER=local` (sem `CONTENT_DRIVER`, o driver GitHub é escolhido se `GITHUB_REPOSITORY` existir; defina-o sempre de forma explícita), `CONTENT_ALLOW_LOCAL_WRITES=true` e os valores de acesso gerados. Execute `npm run dev`. O portal abre em `/pt` ou `/en`; o painel em `/admin`.
 
-A escrita local é apenas um recurso de desenvolvimento: não envia commits e é bloqueada com `NODE_ENV=production`. Para validar produção use a integração GitHub em uma branch de homologação. Os arquivos iniciais já estão em `content/`; `npm run seed:content` apenas cria arquivos ausentes.
+A escrita local é apenas um recurso de desenvolvimento: não envia commits e é bloqueada com `NODE_ENV=production`. Para validar produção use a integração GitHub em uma branch de homologação. Os arquivos iniciais já estão em `content/`; `npm run seed:content` gera os registros a partir de `legacy/studio/scripts/seed/` e apenas cria arquivos ausentes (`CONTENT_ROOT` altera a raiz).
 
 ## Integração GitHub e configuração de produção
 
@@ -69,7 +69,7 @@ npm test
 npm run build
 ```
 
-Execute `npm run package:release -- /caminho/para/nova-release` para gerar uma release completa, incluindo assets, scripts operacionais e exemplos de serviço. O destino deve ser uma pasta nova. O empacotador exclui arquivos de ambiente; configure-os externamente no servidor.
+Execute `npm run package:release -- /caminho/para/nova-release` para gerar uma release completa, incluindo assets, scripts operacionais e exemplos de serviço. O destino deve ser uma pasta nova, fora de `web/`. O empacotador exclui arquivos `.env*`, copia `web/scripts/media-backup.mjs`, `deploy/` e este documento (como `DEPLOY.md`); configure o ambiente externamente no servidor. Os arquivos de `deploy/` estão descritos em `deploy/README.md`.
 
 O build inclui a raiz de conteúdo e gera `.next/standalone/web/server.js`. Copie **todo o conteúdo** de `.next/standalone/` para uma pasta de release, preservando a estrutura. Copie também `.next/static/` para `web/.next/static/` dentro dela. Se houver `web/public/`, copie para o mesmo caminho na release. Na montagem manual, inclua também `web/scripts/media-backup.mjs` e os exemplos de `deploy/`. Não coloque mídias ou cache dentro da release.
 
@@ -81,7 +81,7 @@ NODE_ENV=production HOSTNAME=127.0.0.1 PORT=3000 node server.js
 
 Forneça as variáveis ao processo pelo gerenciador de serviço. `npm start` não é o comando da distribuição standalone.
 
-Crie um usuário de serviço `ggp`, os diretórios de mídia/cache com permissão de escrita para ele e o arquivo de ambiente. Garanta que esse usuário consiga ler a release completa (ajuste proprietário/grupo na cópia, incluindo arquivos que chegaram com permissão restrita). Use `deploy/ggp.service` como unit systemd e o trecho de `deploy/nginx.conf` no virtual host TLS. O Node fica restrito a localhost; o Nginx sobrescreve `X-Real-IP`. A configuração inicial considera uma instância Node.
+Crie um usuário de serviço `ggp`, os diretórios de mídia/cache com permissão de escrita para ele e o arquivo de ambiente. Garanta que esse usuário consiga ler a release completa (ajuste proprietário/grupo na cópia, incluindo arquivos que chegaram com permissão restrita). Use `deploy/ggp.service` como unit systemd (assume release em `/srv/ggp/current`, usuário `ggp`, `/etc/ggp/portal.env`) e o trecho de `deploy/nginx.conf` no virtual host TLS. O Node fica restrito a localhost; o Nginx sobrescreve `X-Real-IP`. A configuração inicial considera uma instância Node.
 
 Faça o deploy em pastas de release e use `/srv/ggp/current` como link para a versão ativa. Troque o link somente após a validação e reinicie o serviço. Preserve a release anterior. Alterações editoriais não exigem novo build; mudanças no código exigem nova release.
 
@@ -94,7 +94,7 @@ npm run test:e2e
 
 O teste usa Chromium em `/usr/bin/chromium` (ou `CHROMIUM_PATH`), conta descartável e cópia dos dados em `work/e2e/`. Confere login, proteção das APIs, criação de áreas/PGPs, upload, publicação, guia, rascunhos, idiomas e sitemaps. Os testes Git simulam a API sem fazer commits externos; antes de produção, confira uma publicação real em branch de homologação com o token configurado.
 
-Na homologação, valide também atualização feita diretamente no Git após 60 segundos, reinício com GitHub temporariamente indisponível e cache válido, persistência das mídias entre releases e logs do serviço. O diário registra tipo/status da falha sem tokens, senhas ou texto completo dos documentos.
+Na homologação, valide também atualização feita diretamente no Git (o snapshot é revalidado a cada 60 segundos), reinício com GitHub temporariamente indisponível e cache válido, persistência das mídias entre releases e logs do serviço. O diário registra tipo/status da falha sem tokens, senhas ou texto completo dos documentos.
 
 ## Importar exportação Sanity
 
@@ -105,7 +105,7 @@ cd web
 MEDIA_DIR=/caminho/persistente/media npm run import:sanity -- /caminho/data.ndjson
 ```
 
-O importador converte os tipos desta versão, transforma Portable Text em Markdown, resolve autores para nomes e baixa assets do CDN Sanity para o armazenamento de mídias. Registros incompletos ficam em rascunho; tipos adiados aparecem no relatório do terminal. Arquivos existentes interrompem a operação para evitar sobrescrita; use `--overwrite` somente após comparar os dados. A importação é local: revise o diff e só então versione os arquivos. O acervo remoto atual não é consultado automaticamente.
+O importador converte os tipos desta versão, transforma Portable Text em Markdown, resolve autores para nomes e baixa assets de `https://cdn.sanity.io/` (até 20 MB cada; a exportação pode ser NDJSON ou array JSON) para o armazenamento de mídias. Registros incompletos ficam em rascunho; tipos adiados aparecem no relatório do terminal. Registros já existentes interrompem a operação (`CONTENT_ROOT` define a raiz de destino) para evitar sobrescrita; use `--overwrite` somente após comparar os dados. A importação é local: revise o diff e só então versione os arquivos. O acervo remoto atual não é consultado automaticamente.
 
 ## Backup e restauração
 
